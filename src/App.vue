@@ -376,8 +376,7 @@
         <!-- Mobile Menu Area End Here -->
     </header>
 
-
-
+    <router-view></router-view>
     
     <!-- Begin Footer Area -->
     <div class="footer">
