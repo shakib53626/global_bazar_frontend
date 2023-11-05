@@ -2149,10 +2149,10 @@ textarea:focus {
   position: relative;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 300ms ease-in 0s;
+  padding: 0 0 50px;
 }
 .single-product-wrap:hover {
   margin: 0 0 -75px;
-  padding: 0 0 75px;
   z-index: 9;
 }
 .single-product-wrap.mt-40:hover {
@@ -2397,8 +2397,8 @@ textarea:focus {
 	bottom: -15px;
 	left: 0;
 	margin: 0 auto;
-	opacity: 0;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	opacity: 1;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	position: absolute;
 	right: 0;
 	text-align: center;
