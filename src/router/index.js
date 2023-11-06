@@ -2,10 +2,12 @@
 
 import {createRouter, createWebHistory} from 'vue-router'
 import Index from '../views/pages/Index.vue'
+import Shop from '../views/pages/Shop.vue'
 
 
 const routes =[	
-    { path: '/', name:'index' , component: Index},
+    { path: '/', name:'home' , component: Index},
+    { path: '/shop', name:'shop' , component: Shop},
   ];
 
 
