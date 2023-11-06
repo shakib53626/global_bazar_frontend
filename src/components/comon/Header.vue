@@ -93,10 +93,10 @@
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
                                     <li class="hm-wishlist">
-                                        <a href="wishlist.html">
+                                        <router-link :to="{name:'wishlist'}">
                                             <span class="cart-item-count wishlist-item-count">0</span>
                                             <i class="fa fa-heart-o"></i>
-                                        </a>
+                                        </router-link>
                                     </li>
                                     <!-- Header Middle Wishlist Area End Here -->
                                     <!-- Begin Header Mini Cart Area -->
@@ -137,12 +137,12 @@
                                             </ul>
                                             <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
                                             <div class="minicart-button">
-                                                <a href="shopping-cart.html" class="li-button li-button-fullwidth li-button-dark">
+                                                <router-link :to="{name: 'cart'}" class="li-button li-button-fullwidth li-button-dark" @click="cartBox">
                                                     <span>View Full Cart</span>
-                                                </a>
-                                                <a href="checkout.html" class="li-button li-button-fullwidth">
+                                                </router-link>
+                                                <router-link :to="{name:'checkout'}" class="li-button li-button-fullwidth" @click="cartBox">
                                                     <span>Checkout</span>
-                                                </a>
+                                                </router-link>
                                             </div>
                                         </div>
                                     </li>
@@ -167,7 +167,7 @@
                                     <ul>
                                         <li class="dropdown-holder"><router-link :to="{name: 'home'}">Home</router-link></li>
                                         <li class="dropdown-holder"><router-link :to="{name: 'shop'}">Shop</router-link></li>
-                                        <li class="megamenu-holder"><a href="shop-left-sidebar.html">Categories</a>
+                                        <li class="megamenu-holder"><router-link :to="{name: 'shop'}">Categories</router-link>
                                             <ul class="megamenu hb-megamenu">
                                                 <li><a href="shop-left-sidebar.html">Shop Page Layout</a>
                                                     <ul>
@@ -201,41 +201,9 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li class="dropdown-holder"><a href="blog-left-sidebar.html">Blog</a>
-                                            <ul class="hb-dropdown">
-                                                <li class="sub-dropdown-holder"><a href="blog-left-sidebar.html">Blog Grid View</a>
-                                                    <ul class="hb-dropdown hb-sub-dropdown">
-                                                        <li><a href="blog-2-column.html">Blog 2 Column</a></li>
-                                                        <li><a href="blog-3-column.html">Blog 3 Column</a></li>
-                                                        <li><a href="blog-left-sidebar.html">Grid Left Sidebar</a></li>
-                                                        <li><a href="blog-right-sidebar.html">Grid Right Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="sub-dropdown-holder"><a href="blog-list-left-sidebar.html">Blog List View</a>
-                                                    <ul class="hb-dropdown hb-sub-dropdown">
-                                                        <li><a href="blog-list.html">Blog List</a></li>
-                                                        <li><a href="blog-list-left-sidebar.html">List Left Sidebar</a></li>
-                                                        <li><a href="blog-list-right-sidebar.html">List Right Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="sub-dropdown-holder"><a href="blog-details-left-sidebar.html">Blog Details</a>
-                                                    <ul class="hb-dropdown hb-sub-dropdown">
-                                                        <li><a href="blog-details-left-sidebar.html">Left Sidebar</a></li>
-                                                        <li><a href="blog-details-right-sidebar.html">Right Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="sub-dropdown-holder"><a href="blog-gallery-format.html">Blog Format</a>
-                                                    <ul class="hb-dropdown hb-sub-dropdown">
-                                                        <li><a href="blog-audio-format.html">Blog Audio Format</a></li>
-                                                        <li><a href="blog-video-format.html">Blog Video Format</a></li>
-                                                        <li><a href="blog-gallery-format.html">Blog Gallery Format</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="about-us.html">About Us</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="shop-left-sidebar.html">Accessories</a></li>
+                                        <li class="dropdown-holder"><router-link :to="{name: 'blog'}">Blog</router-link></li>
+                                        <li><router-link :to="{name: 'about'}">About Us</router-link></li>
+                                        <li><router-link :to="{name: 'contact'}">Contact</router-link></li>
                                     </ul>
                                 </nav>
                             </div>

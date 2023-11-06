@@ -132,9 +132,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -153,7 +153,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -175,9 +175,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -196,7 +196,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -220,9 +220,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -241,7 +241,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -265,9 +265,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -286,7 +286,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -308,9 +308,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -329,7 +329,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -353,9 +353,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -374,7 +374,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -395,16 +395,6 @@ onMounted(() => {
                                 </swiper-slide>
                             </swiper>
 
-
-
-
-
-
-
-
-
-
-
                         </div>
                     </div>
                     <div id="li-bestseller-product" class="tab-pane" role="tabpanel" :class="bestProducts">
@@ -424,9 +414,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -445,7 +435,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -467,9 +457,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -488,7 +478,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -512,9 +502,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -533,7 +523,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -557,9 +547,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -578,7 +568,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -600,9 +590,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -621,7 +611,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -645,9 +635,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -666,7 +656,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -705,9 +695,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -726,7 +716,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -748,9 +738,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -769,7 +759,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -793,9 +783,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -814,7 +804,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -838,9 +828,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -859,7 +849,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -881,9 +871,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -902,7 +892,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -926,9 +916,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -947,7 +937,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1040,9 +1030,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1061,7 +1051,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -1083,9 +1073,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1104,7 +1094,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1128,9 +1118,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1149,7 +1139,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1173,9 +1163,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1194,7 +1184,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -1216,9 +1206,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1237,7 +1227,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1261,9 +1251,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1282,7 +1272,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1341,9 +1331,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1362,7 +1352,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -1384,9 +1374,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1405,7 +1395,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1429,9 +1419,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1450,7 +1440,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1474,9 +1464,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1495,7 +1485,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Accusantium dolorem1</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price">$46.80</span>
                                                     </div>
@@ -1517,9 +1507,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1538,7 +1528,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>
@@ -1562,9 +1552,9 @@ onMounted(() => {
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <router-link :to="{name:'product-details'}">
                                                     <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                </a>
+                                                </router-link>
                                                 <span class="sticker">New</span>
                                             </div>
                                             <div class="product_desc">
@@ -1583,7 +1573,7 @@ onMounted(() => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">Mug Today is a good day</a></h4>
+                                                    <h4><router-link class="product_name" :to="{name:'product-details'}">Mug Today is a good day</router-link></h4>
                                                     <div class="price-box">
                                                         <span class="new-price new-price-2">$71.80</span>
                                                         <span class="old-price">$77.22</span>

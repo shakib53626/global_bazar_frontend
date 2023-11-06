@@ -130,6 +130,7 @@
                                                     </div>
                                                 </div>
                                                 <button class="add-to-cart" type="submit">Add to cart</button>
+                                                <button class="add-to-cart mt-2" type="submit">Buy Now</button>
                                             </form>
                                         </div>
                                         <div class="product-additional-info pt-25">
