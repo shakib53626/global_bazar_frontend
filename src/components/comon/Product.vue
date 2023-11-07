@@ -3,6 +3,10 @@
         product:{
             type:String,
             required: true,
+        },
+        showQuickViewModal:{
+            type: Function,
+            required: true,
         }
     });
 </script>
@@ -45,7 +49,7 @@
                     </div>
                     <div class="add-actions">
                         <ul class="add-actions-link">
-                            <li class="add-cart active"><a href="#">Add to cart</a></li>
+                            <li class="add-cart active"><a href="#"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
                             <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
                             <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
                         </ul>
@@ -57,5 +61,7 @@
     </div>
 </template>
 <style>
-    
+    .quick-view-btn{
+        cursor: pointer;
+    }
 </style>
