@@ -1,14 +1,16 @@
 <script setup>
     const props = defineProps({
         product:{
-            type:String,
+            type:Object,
             required: true,
         },
         showQuickViewModal:{
             type: Function,
             required: true,
-        }
+        },
     });
+    console.log(props.product);
+
 </script>
 <template>
     <div>
@@ -16,7 +18,7 @@
             <!-- single-product-wrap start -->
             <div class="single-product-wrap">
                 <div class="product-image">
-                    <router-link :to="{name:'product-details'}">
+                    <router-link :to="{ name: 'product-details', params: { slug: product.slug } }">
                         <img :src="product.image" alt="Li's Product Image">
                     </router-link>
                     <span class="sticker">New</span>
@@ -37,7 +39,11 @@
                                 </ul>
                             </div>
                         </div>
-                        <h4><router-link class="product_name" :to="{name:'product-details'}">{{product.name}}</router-link></h4>
+                        <h4>
+                            <router-link class="product_name" :to="{name:'product-details', params: {slug: product.slug}}">
+                                {{product.name}}
+                            </router-link>
+                        </h4>
                         <div class="price-box" v-if="product.offer_price==0">
                             <span class="new-price">$ {{ product.regular_price }}</span>
                         </div>
@@ -62,6 +68,6 @@
 </template>
 <style>
     .quick-view-btn{
-        cursor: pointer;
+        cursor: pointer ;
     }
 </style>

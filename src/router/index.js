@@ -20,7 +20,11 @@ const routes =[
     { path: '/blog-details', name:'blog-details' , component: BlogDetails},
     { path: '/about-us', name:'about' , component: About},
     { path: '/contact-us', name:'contact' , component: Contact},
-    { path: '/product-details', name:'product-details' , component: ProductDetails},
+    {
+      path: '/products/:slug',
+      name: 'product-details',
+      component: ProductDetails,
+    },
     { path: '/wishlist', name:'wishlist' , component: Wishlist},
     { path: '/cart', name:'cart' , component: Cart},
     { path: '/checkout', name:'checkout' , component: Checkout},

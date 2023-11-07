@@ -23,7 +23,6 @@ const {offersBanner} = storeToRefs(offerbanner);
 // Products show code here *********************************************************************
 const Product = useProducts();
 const {products} = storeToRefs(Product);
-console.log(products);
 
 // Products Tab Code HEre *******************************************************************
 const newProducts       = ref('active');
