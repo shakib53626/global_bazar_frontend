@@ -1,5 +1,12 @@
 <script setup>
-    import {ref, onMounted} from 'vue'
+    import {ref, onMounted,defineProps } from 'vue'
+    
+    const props = defineProps({
+        selectedProduct:{
+            type:Object,
+            required: true,
+        },
+    });
 
     onMounted(() => {
        $('.product-details-images').each(function(){
@@ -50,44 +57,22 @@
                         </button>
                         <div class="modal-inner-area row">
                             <div class="col-lg-5 col-md-6 col-sm-6">
-                                <!-- Product Details Left -->
                                 <div class="product-details-left">
                                     <div class="product-details-images slider-navigation-1">
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/1.jpg" alt="product image">
-                                        </div>
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/2.jpg" alt="product image">
-                                        </div>
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/3.jpg" alt="product image">
-                                        </div>
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/4.jpg" alt="product image">
-                                        </div>
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/5.jpg" alt="product image">
-                                        </div>
-                                        <div class="lg-image">
-                                            <img src="@/assets/images/product/large-size/6.jpg" alt="product image">
+                                        <div class="lg-image" v-for="(image, index) in selectedProduct.gallery_image" :key="index">
+                                            <img :src="image" alt="product image">
                                         </div>
                                     </div>
                                     <div class="product-details-thumbs slider-thumbs-1">                                        
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/1.jpg" alt="product image thumb"></div>
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/2.jpg" alt="product image thumb"></div>
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/3.jpg" alt="product image thumb"></div>
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/4.jpg" alt="product image thumb"></div>
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/5.jpg" alt="product image thumb"></div>
-                                        <div class="sm-image"><img src="@/assets/images/product/small-size/6.jpg" alt="product image thumb"></div>
+                                        <div class="sm-image" v-for="(image, index) in selectedProduct.gallery_image" :key="index"><img :src="image" alt="product image thumb"></div>
                                     </div>
                                 </div>
-                                <!--// Product Details Left -->
                             </div>
 
                             <div class="col-lg-7 col-md-6 col-sm-6">
                                 <div class="product-details-view-content pt-60">
                                     <div class="product-info">
-                                        <h2>Today is a good day Framed poster</h2>
+                                        <h2 v-if="selectedProduct">{{ selectedProduct.name }}</h2>
                                         <span class="product-details-ref">Reference: demo_15</span>
                                         <div class="rating-box pt-20">
                                             <ul class="rating rating-with-review-item">
@@ -101,7 +86,8 @@
                                             </ul>
                                         </div>
                                         <div class="price-box pt-20">
-                                            <span class="new-price new-price-2">$57.98</span>
+                                            <span class="new-price new-price-2" v-if="selectedProduct">$ {{ selectedProduct.offer_price==0?selectedProduct.regular_price:selectedProduct.offer_price }}</span>
+                                            <span class="old-price ms-2" v-if="selectedProduct"><span v-if="selectedProduct.offer_price!=0"><del>$ {{ selectedProduct.regular_price }}</del></span></span>
                                         </div>
                                         <div class="product-desc">
                                             <p>

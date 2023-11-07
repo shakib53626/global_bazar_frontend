@@ -1,10 +1,16 @@
 <script setup>
     const props = defineProps({
         product:{
-            type:String,
+            type:Object,
             required: true,
-        }
+        },
+        showQuickViewModal:{
+            type: Function,
+            required: true,
+        },
     });
+    console.log(props.product);
+
 </script>
 <template>
     <div>
@@ -12,7 +18,7 @@
             <!-- single-product-wrap start -->
             <div class="single-product-wrap">
                 <div class="product-image">
-                    <router-link :to="{name:'product-details'}">
+                    <router-link :to="{ name: 'product-details', params: { slug: product.slug } }">
                         <img :src="product.image" alt="Li's Product Image">
                     </router-link>
                     <span class="sticker">New</span>
@@ -33,7 +39,11 @@
                                 </ul>
                             </div>
                         </div>
-                        <h4><router-link class="product_name" :to="{name:'product-details'}">{{product.name}}</router-link></h4>
+                        <h4>
+                            <router-link class="product_name" :to="{name:'product-details', params: {slug: product.slug}}">
+                                {{product.name}}
+                            </router-link>
+                        </h4>
                         <div class="price-box" v-if="product.offer_price==0">
                             <span class="new-price">$ {{ product.regular_price }}</span>
                         </div>
@@ -45,7 +55,7 @@
                     </div>
                     <div class="add-actions">
                         <ul class="add-actions-link">
-                            <li class="add-cart active"><a href="#">Add to cart</a></li>
+                            <li class="add-cart active"><a href="#"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
                             <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
                             <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
                         </ul>
@@ -57,5 +67,7 @@
     </div>
 </template>
 <style>
-    
+    .quick-view-btn{
+        cursor: pointer ;
+    }
 </style>
