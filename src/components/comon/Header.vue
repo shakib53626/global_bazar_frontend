@@ -11,6 +11,11 @@
         $('.hm-minicart-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
         $('.hm-minicart-trigger').toggleClass('is-active');
     }
+    
+    const loginToggole = () =>{
+        $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
+        $('.ht-setting-trigger').toggleClass('is-active');
+    }
 
     onMounted(() => {
         themeInfo.getThemeData();
@@ -38,12 +43,12 @@
                                 <ul class="ht-menu">
                                     <!-- Begin Setting Area -->
                                     <li>
-                                        <div class="ht-setting-trigger"><span>Setting</span></div>
+                                        <div class="ht-setting-trigger" @click="loginToggole"><span>Setting</span></div>
                                         <div class="setting ht-setting">
                                             <ul class="ht-setting-list">
                                                 <li><a href="login-register.html">My Account</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="login-register.html">Sign In</a></li>
+                                                <li><router-link :to="{name:'login'}" @click="loginToggole">Sign In</router-link></li>
+                                                <li><router-link :to="{name:'register'}" @click="loginToggole">Sing Up</router-link></li>
                                             </ul>
                                         </div>
                                     </li>
