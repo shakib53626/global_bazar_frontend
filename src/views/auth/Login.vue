@@ -1,5 +1,30 @@
-<script>
+<script setup>
+    import {ref, reactive, onMounted} from 'vue';
+    import { useAuth } from '@/stores/auth';
+    import { storeToRefs } from 'pinia';
+    
+    const showPassword = ref(false);
+    const form = reactive({
+        phone: '',
+        password: '',
+    });
 
+    const auth = useAuth();
+
+    const {errors} = storeToRefs(auth);
+    
+
+    const toggleShow = () =>{
+        showPassword.value = !showPassword.value
+    }
+
+    const submit = async() =>{
+        await auth.login(form);
+    }
+
+    onMounted(() =>{
+        auth.login();
+    });
 </script>
 <template>
     <div>
@@ -21,17 +46,27 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30 mt-30 mx-auto">
                         <!-- Login Form s-->
-                        <form action="#" >
+                        <form @submit.prevent="submit" >
                             <div class="login-form">
                                 <h4 class="login-title">Login</h4>
                                 <div class="row">
                                     <div class="col-md-12 col-12 mb-20">
-                                        <label>Email Address*</label>
-                                        <input class="mb-0" type="email" placeholder="Email Address">
+                                        <label>Phone Number*</label>
+                                        <input class="mb-0" type="text" placeholder="Enter Phone Number" v-model="form.phone">
+                                        <span class="text-danger" v-if="errors.phone">{{errors.phone[0]}}</span>
                                     </div>
                                     <div class="col-12 mb-20">
                                         <label>Password</label>
-                                        <input class="mb-0" type="password" placeholder="Password">
+                                        <span style="position:relative;">
+                                            <input class="mb-0" :type="showPassword?'text':'password'" placeholder="Password" v-model="form.password">
+                                            <span class="text-danger" v-if="errors.password">{{errors.password[0]}}</span>
+                                            <span @click="toggleShow">
+                                                <i :class="{
+                                                    'fas fa-eye eye_icon': !showPassword,
+                                                    'fas fa-eye-slash eye_icon': showPassword,
+                                                }"></i>
+                                            </span>
+                                        </span>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="check-box d-inline-block ml-0 ml-md-2 mt-10">
@@ -57,5 +92,12 @@
     </div>
 </template>
 <style>
-    
+    .eye_icon{
+        position:absolute;
+        top:0;
+        right:18px;
+        color:rgb(168, 164, 164);
+        cursor:pointer;
+        font-size:18px;
+    }
 </style>

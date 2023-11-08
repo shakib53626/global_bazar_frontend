@@ -146,7 +146,9 @@ onMounted(() => {
                                 class="mySwiper"
                             >
                                 <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    <div class="col-lg-12">
+                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    </div>
                                 </swiper-slide>
                             </swiper>
 
@@ -165,7 +167,9 @@ onMounted(() => {
                                 class="mySwiper"
                             >
                                 <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    <div class="col-lg-12">
+                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    </div>
                                 </swiper-slide>
                             </swiper>
                         </div>
@@ -183,7 +187,9 @@ onMounted(() => {
                                 class="mySwiper"
                             >
                                 <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    <div class="col-lg-12">
+                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    </div>
                                 </swiper-slide>
                             </swiper>
                         </div>
@@ -235,7 +241,9 @@ onMounted(() => {
                                 class="mySwiper"
                             >
                                 <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    <div class="col-lg-12">
+                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    </div>
                                 </swiper-slide>
                             </swiper>
                         </div>
@@ -273,7 +281,9 @@ onMounted(() => {
                                 class="mySwiper"
                             >
                                 <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    <div class="col-lg-12">
+                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                    </div>
                                 </swiper-slide>
                             </swiper>
                         </div>

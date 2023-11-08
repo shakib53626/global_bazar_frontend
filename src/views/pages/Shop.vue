@@ -1,11 +1,35 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {QuickViewModal} from '@/components/comon';
+    import {QuickViewModal, Products} from '@/components/comon';
+    import {useProducts} from '@/stores'
+    import { storeToRefs } from 'pinia';
+
+
+    // Products show code here *********************************************************************
+    const Product = useProducts();
+    const {products} = storeToRefs(Product);
 
     // For Quick View Modal ****************************************************
     let myModal;
-    const showQuickViewModal = () =>{
+    const selectedProduct =ref({
+        id:1,
+        name:'Accusantium dolorem1',
+        image:'./src/assets/images/product/large-size/1.jpg',
+        gallery_image: [
+            './src/assets/images/product/large-size/1.jpg',
+            './src/assets/images/product/large-size/2.jpg',
+            './src/assets/images/product/large-size/3.jpg',
+            './src/assets/images/product/large-size/4.jpg',
+            './src/assets/images/product/large-size/5.jpg',
+            './src/assets/images/product/large-size/6.jpg',
+        ],
+        regular_price: 46.00,
+        offer_price: 0,
+        discount:0,
+    });
+    const showQuickViewModal = (product) =>{
         myModal.show();
+        selectedProduct.value = product;
     }
 
     // Product tab code here ***************************************************
@@ -22,6 +46,7 @@
     }
 
     onMounted(() => {
+        Product.getProductsData();
         myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))
     })
 </script>
@@ -83,497 +108,8 @@
                                 <div id="grid-view" class="tab-pane fade show" :class="gridProducts" role="tabpanel">
                                     <div class="product-area shop-product-area">
                                         <div class="row">
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/3.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/4.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/5.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/6.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/7.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/8.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/9.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/10.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/11.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40">
-                                                <!-- single-product-wrap start -->
-                                                <div class="single-product-wrap">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/12.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Accusantium dolorem1</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="add-actions">
-                                                            <ul class="add-actions-link">
-                                                                <li class="add-cart active cart-width"><a href="shopping-cart.html"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
-                                                                <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
-                                                                <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- single-product-wrap end -->
+                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40" v-for="(product, index) in products" :key="index">
+                                                <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                             </div>
                                         </div>
                                     </div>
@@ -581,11 +117,11 @@
                                 <div id="list-view" class="tab-pane fade product-list-view" :class="listProducts" role="tabpanel">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="row product-layout-list">
+                                            <div class="row product-layout-list" v-for="(product, index) in products" :key="index">
                                                 <div class="col-lg-3 col-md-5 ">
                                                     <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/12.jpg" alt="Li's Product Image">
+                                                        <router-link :to="{name: 'product-details', params: {slug: product.slug}}">
+                                                            <img :src="product.image" alt="Li's Product Image">
                                                         </router-link>
                                                         <span class="sticker">New</span>
                                                     </div>
@@ -595,7 +131,7 @@
                                                         <div class="product_desc_info">
                                                             <div class="product-review">
                                                                 <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
+                                                                    <router-link :to="{name: 'product-details', params: {slug:product.slug}}">Graphic Corner</router-link>
                                                                 </h5>
                                                                 <div class="rating-box">
                                                                     <ul class="rating">
@@ -607,9 +143,11 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
+                                                            <h4><router-link class="product_name" :to="{name: 'product-details', params: {slug:product.slug}}">{{product.name}}</router-link></h4>
                                                             <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
+                                                                <span class="new-price new-price-2">$ {{ product.offer_price }}</span>
+                                                                <span class="old-price">$ {{ product.regular_price }}</span>
+                                                                <span class="discount-percentage">- {{ product.discount }}%</span>
                                                             </div>
                                                             <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
                                                         </div>
@@ -617,490 +155,6 @@
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/11.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/10.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/9.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/8.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/7.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/6.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/5.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/4.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/3.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/2.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
-                                                            <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row product-layout-list last-child">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <router-link :to="{name: 'product-details'}">
-                                                            <img src="@/assets/images/product/large-size/1.jpg" alt="Li's Product Image">
-                                                        </router-link>
-                                                        <span class="sticker">New</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details'}">Graphic Corner</router-link>
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><router-link class="product_name" :to="{name: 'product-details'}">Hummingbird printed t-shirt</router-link></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price">$46.80</span>
-                                                            </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action">
                                                         <ul class="add-actions-link">
                                                             <li class="add-cart"><a href="#">Add to cart</a></li>
                                                             <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
@@ -1256,11 +310,17 @@
             </div>
         </div>
         <!-- Content Wraper Area End Here -->
-        <QuickViewModal/>
+        <QuickViewModal :selectedProduct="selectedProduct"/>
     </div>
 </template>
 <style>
     .cart-width{
         width: 85px !important;
+    }
+    .col-lg-3.col-md-3.col-sm-6.mt-40 {
+      padding: 0;
+    }
+    .col-lg-3.col-md-3.col-sm-6.mt-40 .add-cart{
+      width: 110px !important;
     }
 </style>
