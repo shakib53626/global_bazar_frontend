@@ -1,11 +1,17 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {useThemeSetting} from '@/stores'
+    import {useThemeSetting, useAuth} from '@/stores'
     import { storeToRefs } from 'pinia';
+    import { ElNotification } from 'element-plus'
+    import { useRouter } from 'vue-router';
+    
+    const router        = useRouter();
+    const themeInfo     = useThemeSetting();
+    const auth          = useAuth();
+    const {user, logoutLoading} = storeToRefs(auth);
+    const {themesInfo, currency, language} = storeToRefs(themeInfo);
 
     // theme Information code Here ******************************
-    const themeInfo = useThemeSetting();
-    const {themesInfo, currency, language} = storeToRefs(themeInfo);
 
     const cartBox = () =>{
         $('.hm-minicart-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
@@ -13,6 +19,24 @@
     }
     
     const loginToggole = () =>{
+        $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
+        $('.ht-setting-trigger').toggleClass('is-active');
+    }
+
+    // User Logout Code Here **************************************
+
+    const userLogout = async() =>{
+        let res = await auth.logout();
+        if(res){
+            router.push({name:'login'});
+              ElNotification({
+                title: 'Success',
+                message: 'Logout Successfully',
+                type: 'success',
+                position: 'top-left',
+            })
+        }else{
+        }
         $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
         $('.ht-setting-trigger').toggleClass('is-active');
     }
@@ -46,9 +70,15 @@
                                         <div class="ht-setting-trigger" @click="loginToggole"><span>Setting</span></div>
                                         <div class="setting ht-setting">
                                             <ul class="ht-setting-list">
-                                                <li><a href="login-register.html">My Account</a></li>
-                                                <li><router-link :to="{name:'login'}" @click="loginToggole">Sign In</router-link></li>
-                                                <li><router-link :to="{name:'register'}" @click="loginToggole">Sing Up</router-link></li>
+                                                <li><router-link :to="{name:'my-account'}" @click="loginToggole" v-if="user.data">My Account</router-link></li>
+                                                <li><router-link :to="{name:'login'}" @click="loginToggole" v-if="!user.data">Sign In</router-link></li>
+                                                <li><router-link :to="{name:'register'}" @click="loginToggole" v-if="!user.data">Sing Up</router-link></li>
+                                                <li>
+                                                    <a href="" @click.prevent="userLogout" v-if="user.data">
+                                                        <span v-if="logoutLoading"><i class="fas fa-spinner fa-spin"></i> Loading</span>
+                                                        <span v-else>Logout</span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>

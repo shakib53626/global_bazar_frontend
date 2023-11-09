@@ -1,6 +1,7 @@
 
 
 import {createRouter, createWebHistory} from 'vue-router'
+import {useAuth} from '@/stores'
 import Index from '../views/pages/Index.vue'
 import Shop from '../views/pages/Shop.vue'
 import Blog from '../views/pages/Blog.vue'
@@ -13,6 +14,7 @@ import Cart from '../views/pages/Cart.vue'
 import Checkout from '../views/pages/Checkout.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
+import MyAccount from '../views/auth/MyAccount.vue'
 
 
 const routes =[	
@@ -62,7 +64,7 @@ const routes =[
       path: '/wishlist',
       name: 'wishlist' ,
       component: Wishlist,
-      meta: { title: 'Wishlist' }
+      meta: { title: 'Wishlist', requiresAuth: true }
     },
     {
       path: '/cart',
@@ -80,13 +82,19 @@ const routes =[
       path: '/login',
       name: 'login',
       component: Login,
-      meta: { title: 'Login' }
+      meta: { title: 'Login', guest: true }
     },
     {
       path: '/register',
       name: 'register',
       component: Register,
-      meta: { title: 'Register' }
+      meta: { title: 'Register', guest: true }
+    },
+    {
+      path: '/my-account',
+      name: 'my-account',
+      component: MyAccount,
+      meta: { title: 'My Account', requiresAuth: true }
     },
   ];
 
@@ -96,9 +104,26 @@ const router = createRouter({
   routes,
 })
 
+const DEFAULT_TITLE = "404";
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title;
-  next();
+  document.title = to.meta.title || DEFAULT_TITLE;
+  
+  const loggedIn = useAuth();
+  if(to.matched.some((record) => record.meta.requiresAuth)){
+    if(!loggedIn.user.meta){
+      next({name:"login"});  
+    }else{
+      next();
+    }
+  }else if(to.matched.some((record) => record.meta.guest)){
+    if(loggedIn.user.meta){
+      next({name:"my-account"});  
+    }else{
+      next();
+    }
+  }else{
+    next();
+  }
 })
 
 export default router;

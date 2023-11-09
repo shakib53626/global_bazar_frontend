@@ -1,7 +1,6 @@
 <script setup>
     import {ref, reactive, onMounted} from 'vue';
-    import { useAuth } from '@/stores/auth';
-    import { storeToRefs } from 'pinia';
+    import { useAuth } from '@/stores/auth'
     import { Form, Field } from 'vee-validate';
     import * as yup from 'yup';
     import { useRouter } from 'vue-router';
@@ -11,7 +10,6 @@
     const showPassword  = ref(false);
     const auth          = useAuth();
     const router        = useRouter();
-    const {errors}      = storeToRefs(auth);
     
     const schema = yup.object({
         phone: yup.string().required("Phone Number field is required").min(11),

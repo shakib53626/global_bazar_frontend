@@ -9,7 +9,6 @@
             required: true,
         },
     });
-    console.log(props.product);
 
 </script>
 <template>
