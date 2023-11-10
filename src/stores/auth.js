@@ -35,10 +35,26 @@ export const useAuth = defineStore("auth", {
         async register(formData){
             try {
                 const res = await axios.post('/user/register', formData);
+                if(res.status === 200){
+                    return new Promise((resolve) => {
+                        resolve(res.data);
+                    });
+                }      
+            } catch (error) {
+                if(error.response.data){
+                    return new Promise((reject) => {
+                        reject(error.response.data.errors);
+                    });
+                }
+            }
+        },
+        
+        async otpVerify(verifyData){
+            try {
+                const res = await axios.post('/user/otp-verify', verifyData);
                 console.log(res.data);
-                if(res.status === 201){
+                if(res.status === 200){
                     this.user = res.data;
-
                     return new Promise((resolve) => {
                         resolve(res.data);
                     });
