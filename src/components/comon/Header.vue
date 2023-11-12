@@ -1,6 +1,6 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {useThemeSetting, useAuth, useNotification} from '@/stores'
+    import {useThemeSetting, useAuth, useNotification, useCategories} from '@/stores'
     import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
     
@@ -8,6 +8,8 @@
     const themeInfo     = useThemeSetting();
     const auth          = useAuth();
     const notification  = useNotification();
+    const category      = useCategories();
+    const {categories}  = storeToRefs(category);
     const {user, logoutLoading} = storeToRefs(auth);
     const {themesInfo, currency, language} = storeToRefs(themeInfo);
 
@@ -38,6 +40,7 @@
 
     onMounted(() => {
         themeInfo.getThemeData();
+        category.getCaegories();
     })
 </script>
 
@@ -196,8 +199,9 @@
                                         <li class="dropdown-holder"><router-link :to="{name: 'shop'}">Shop</router-link></li>
                                         <li class="megamenu-holder"><router-link :to="{name: 'shop'}">Categories</router-link>
                                             <ul class="megamenu hb-megamenu">
-                                                <li><a href="shop-left-sidebar.html">Shop Page Layout</a>
-                                                    <ul>
+                                                <li v-for="(category, index) in categories" :key="index">
+                                                    <a href="shop-left-sidebar.html">{{ category.name }}</a>
+                                                    <!-- <ul>
                                                         <li><a href="shop-3-column.html">Shop 3 Column</a></li>
                                                         <li><a href="shop-4-column.html">Shop 4 Column</a></li>
                                                         <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
@@ -205,26 +209,7 @@
                                                         <li><a href="shop-list.html">Shop List</a></li>
                                                         <li><a href="shop-list-left-sidebar.html">Shop List Left Sidebar</a></li>
                                                         <li><a href="shop-list-right-sidebar.html">Shop List Right Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="single-product-gallery-left.html">Single Product Style</a>
-                                                    <ul>
-                                                        <li><a href="single-product-carousel.html">Single Product Carousel</a></li>
-                                                        <li><a href="single-product-gallery-left.html">Single Product Gallery Left</a></li>
-                                                        <li><a href="single-product-gallery-right.html">Single Product Gallery Right</a></li>
-                                                        <li><a href="single-product-tab-style-top.html">Single Product Tab Style Top</a></li>
-                                                        <li><a href="single-product-tab-style-left.html">Single Product Tab Style Left</a></li>
-                                                        <li><a href="single-product-tab-style-right.html">Single Product Tab Style Right</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="single-product.html">Single Products</a>
-                                                    <ul>
-                                                        <li><a href="single-product.html">Single Product</a></li>
-                                                        <li><a href="single-product-sale.html">Single Product Sale</a></li>
-                                                        <li><a href="single-product-group.html">Single Product Group</a></li>
-                                                        <li><a href="single-product-normal.html">Single Product Normal</a></li>
-                                                        <li><a href="single-product-affiliate.html">Single Product Affiliate</a></li>
-                                                    </ul>
+                                                    </ul> -->
                                                 </li>
                                             </ul>
                                         </li>
@@ -258,5 +243,9 @@
         border: none;
         height: 20px;
         width: 68px;
+    }
+    .megamenu{
+        display: grid;
+        grid-template-columns: auto auto auto auto;
     }
 </style>

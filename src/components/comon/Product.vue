@@ -10,6 +10,9 @@
         },
     });
 
+    let price = props.product.price - (props.product.discount/100)*props.product.price;
+
+
 </script>
 <template>
     <div>
@@ -18,9 +21,9 @@
         <div class="single-product-wrap">
             <div class="product-image">
                 <router-link :to="{ name: 'product-details', params: { slug: product.slug } }">
-                    <img :src="product.image" alt="Li's Product Image">
+                    <img :src="product.thumbnail" alt="Li's Product Image">
                 </router-link>
-                <span class="sticker">New</span>
+                <span class="sticker">{{product.conditions}}</span>
             </div>
             <div class="product_desc">
                 <div class="product_desc_info">
@@ -43,12 +46,12 @@
                             {{product.name}}
                         </router-link>
                     </h4>
-                    <div class="price-box" v-if="product.offer_price==0">
-                        <span class="new-price">$ {{ product.regular_price }}</span>
+                    <div class="price-box" v-if="product.discount==0">
+                        <span class="new-price">{{ $filters.currencySymbol(product.price) }}</span>
                     </div>
                     <div class="price-box" v-else>
-                        <span class="new-price new-price-2">$ {{ product.offer_price }}</span>
-                        <span class="old-price">$ {{ product.regular_price }}</span>
+                        <span class="new-price new-price-2">{{ $filters.currencySymbol(price.toFixed()) }}</span>
+                        <span class="old-price">{{ $filters.currencySymbol(product.price) }}</span>
                         <span class="discount-percentage">- {{ product.discount }}%</span>
                     </div>
                 </div>
