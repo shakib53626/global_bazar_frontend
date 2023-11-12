@@ -13,3 +13,8 @@
         @import "./assets/css/helper.css";
         @import "./assets/css/style.css";
         @import "./assets/css/responsive.css";
+        @import 'nprogress/nprogress.css';
+
+        #nprogress .bar{
+                height: 4px !important;
+        }

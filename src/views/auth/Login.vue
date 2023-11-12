@@ -1,15 +1,15 @@
 <script setup>
     import {ref, reactive, onMounted} from 'vue';
-    import { useAuth } from '@/stores/auth'
+    import { useAuth, useNotification } from '@/stores'
     import { Form, Field } from 'vee-validate';
     import * as yup from 'yup';
     import { useRouter } from 'vue-router';
-    import { ElNotification } from 'element-plus'
 
     
     const showPassword  = ref(false);
     const auth          = useAuth();
     const router        = useRouter();
+    const notification  = useNotification();
     
     const schema = yup.object({
         phone: yup.string().required("Phone Number field is required").min(11),
@@ -24,12 +24,7 @@
         let res = await auth.login(values);
         if(res.data){
             router.push({name:'home'});
-              ElNotification({
-                title: 'Success',
-                message: 'Login Successfully',
-                type: 'success',
-                position: 'top-left',
-            })
+            notification.Success("Login Success")
         }else{
             setErrors(res);
         }

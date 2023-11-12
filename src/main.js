@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import './style.css'
 import './template.js'
 import 'element-plus/dist/index.css'
+import 'nprogress/nprogress.css'
 import App from './App.vue'
 import { createPersistedState } from 'pinia-plugin-persistedstate';
 import router from './router'

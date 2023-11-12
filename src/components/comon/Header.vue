@@ -1,13 +1,13 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {useThemeSetting, useAuth} from '@/stores'
+    import {useThemeSetting, useAuth, useNotification} from '@/stores'
     import { storeToRefs } from 'pinia';
-    import { ElNotification } from 'element-plus'
     import { useRouter } from 'vue-router';
     
     const router        = useRouter();
     const themeInfo     = useThemeSetting();
     const auth          = useAuth();
+    const notification  = useNotification();
     const {user, logoutLoading} = storeToRefs(auth);
     const {themesInfo, currency, language} = storeToRefs(themeInfo);
 
@@ -29,12 +29,7 @@
         let res = await auth.logout();
         if(res){
             router.push({name:'login'});
-              ElNotification({
-                title: 'Success',
-                message: 'Logout Successfully',
-                type: 'success',
-                position: 'top-left',
-            })
+            notification.Success("Logout Success");
         }else{
         }
         $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();

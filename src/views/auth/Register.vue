@@ -1,10 +1,9 @@
 <script setup>
    import { Form, Field } from 'vee-validate';
    import * as yup from 'yup';
-   import { ElNotification } from 'element-plus'
    import { reactive, ref } from 'vue';
    import { useRouter } from 'vue-router';
-   import {useAuth} from '@/stores'
+   import {useAuth, useNotification} from '@/stores'
 
 
    const showPassword = ref(false);
@@ -15,6 +14,7 @@
    })
    const auth         = useAuth();
    const router       = useRouter();
+   const notification = useNotification();
 
     const schema = yup.object({
         name: yup.string().required(),
@@ -26,14 +26,9 @@
 
      const submit = async(values, {setErrors}) =>{
         let res = await auth.register(values);
-        if(res.status){
-            veryfiOtp.value=true;
-              ElNotification({
-                title: 'Success',
-                message: 'OTP Send Success',
-                type: 'success',
-                position: 'top-left',
-            })
+        if(res.data){
+            router.push({name:'home'})
+            notification.Success("Registration Seccess")
         }else{
             setErrors(res);
         }
@@ -54,12 +49,7 @@
         if(res.data){
             router.push({name:'home'})
             veryfiOtp.value=false;
-              ElNotification({
-                title: 'Success',
-                message: 'Registration Successfully',
-                type: 'success',
-                position: 'top-left',
-            })
+            notification.Success("Registration Seccess")
         }else{
             setErrors(res);
         }
