@@ -23,5 +23,9 @@ app.mount('#app')
 app.config.globalProperties.$filters={
     currencySymbol(value){
         return  "৳ " + value.toLocaleString();
+    },
+
+    makeImgPath(image){
+        return  axios.defaults.baseURL + "/" + image;
     }
 }

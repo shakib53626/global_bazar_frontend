@@ -21,7 +21,7 @@
         <div class="single-product-wrap">
             <div class="product-image">
                 <router-link :to="{ name: 'product-details', params: { slug: product.slug } }">
-                    <img :src="product.thumbnail" alt="Li's Product Image">
+                    <img :src="$filters.makeImgPath(product.thumbnail)" alt="Li's Product Image">
                 </router-link>
                 <span class="sticker">{{product.conditions}}</span>
             </div>
@@ -47,7 +47,8 @@
                         </router-link>
                     </h4>
                     <div class="price-box" v-if="product.discount==0">
-                        <span class="new-price">{{ $filters.currencySymbol(product.price) }}</span>
+                        <span class="new-price">
+                            {{ $filters.currencySymbol(product.price) }}</span>
                     </div>
                     <div class="price-box" v-else>
                         <span class="new-price new-price-2">{{ $filters.currencySymbol(price.toFixed()) }}</span>

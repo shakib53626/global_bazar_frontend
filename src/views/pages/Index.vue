@@ -22,7 +22,7 @@ const {offersBanner} = storeToRefs(offerbanner);
 
 // Products show code here *********************************************************************
 const Product = useProducts();
-const {products} = storeToRefs(Product);
+const {products, sale, popular, feature} = storeToRefs(Product);
 
 // Products Tab Code HEre *******************************************************************
 const newProducts       = ref('active');
@@ -75,6 +75,9 @@ onMounted(() => {
     offerbanner.getOfferBannerData();
     slider.getSliderData();
     Product.getProductsData();
+    Product.getProductsData('sale');
+    Product.getProductsData('popular');
+    Product.getProductsData('feature');
     myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))
 })
 </script>
@@ -106,7 +109,7 @@ onMounted(() => {
                                     <div class="single-slide align-center-left animation-style-02 bg-2">
                                         <div class="slider-progress"></div>
                                         <div class="slider-content">
-                                            <img :src="slider.image" alt="">
+                                            <img :src="$filters.makeImgPath(slider.image)" alt="">
                                         </div>
                                     </div>
                                 </swiper-slide>
@@ -124,9 +127,9 @@ onMounted(() => {
                     <div class="col-lg-12">
                         <div class="li-product-tab">
                             <ul class="nav li-product-menu">
-                                <li><a :class="newProducts" data-toggle="tab" @click="showTabItem('new')"><span>New Arrival</span></a></li>
-                                <li><a :class="bestProducts" data-toggle="tab"  @click="showTabItem('best')"><span>Bestseller</span></a></li>
-                                <li><a :class="feturedProducts" data-toggle="tab" @click="showTabItem('fetured')"><span>Featured Products</span></a></li>
+                                <li><a :class="newProducts" data-toggle="tab" @click="showTabItem('new')"><span>Sale</span></a></li>
+                                <li><a :class="bestProducts" data-toggle="tab"  @click="showTabItem('best')"><span>Popular</span></a></li>
+                                <li><a :class="feturedProducts" data-toggle="tab" @click="showTabItem('fetured')"><span>Featured</span></a></li>
                             </ul>               
                         </div>
                         <!-- Begin Li's Tab Menu Content Area -->
@@ -134,7 +137,7 @@ onMounted(() => {
                 </div>
                 <div class="tab-content">
                     <div id="li-new-product" class="tab-pane show" role="tabpanel" :class="newProducts">
-                        <div class="product-active">
+                        <div class="product-active mt-2">
 
                             <swiper
                                 :slidesPerView="5"
@@ -145,7 +148,7 @@ onMounted(() => {
                                 :modules="modules"
                                 class="mySwiper"
                             >
-                                <swiper-slide v-for="(product, index) in products" :key="index">
+                                <swiper-slide v-for="(product, index) in sale" :key="index">
                                     <div class="col-lg-12">
                                         <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                     </div>
@@ -166,7 +169,7 @@ onMounted(() => {
                                 :modules="modules"
                                 class="mySwiper"
                             >
-                                <swiper-slide v-for="(product, index) in products" :key="index">
+                                <swiper-slide v-for="(product, index) in popular" :key="index">
                                     <div class="col-lg-12">
                                         <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                     </div>
@@ -186,7 +189,7 @@ onMounted(() => {
                                 :modules="modules"
                                 class="mySwiper"
                             >
-                                <swiper-slide v-for="(product, index) in products" :key="index">
+                                <swiper-slide v-for="(product, index) in feature" :key="index">
                                     <div class="col-lg-12">
                                         <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                     </div>
