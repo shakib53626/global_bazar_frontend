@@ -1,4 +1,13 @@
 <script setup>
+    import { useCart, useNotification } from '@/stores';
+    import { storeToRefs } from 'pinia';
+    import { ref } from 'vue';
+
+    const cart         = useCart();
+    const notification = useNotification();
+    const {loading}    = storeToRefs(cart);
+    const price        = ref();
+
     const props = defineProps({
         product:{
             type:Object,
@@ -10,8 +19,27 @@
         },
     });
 
-    let price = props.product.price - (props.product.discount/100)*props.product.price;
+    const offer_price = props.product.price - (props.product.discount/100)*props.product.price;
 
+    const addToCart = (product) =>{
+        if(product.discount){
+            price.value = product.price - (product.discount/100)*product.price;
+        }else{
+            price.value = product.price
+        }
+        cart.addToCart({
+            id           : product.id,
+            name         : product.name,
+            quantity     : 1,
+            price        : price.value.toFixed(),
+            discount     : product.discount,
+            regular_price: product.price,
+            thumbnail    : product.thumbnail,
+            slug         : product.slug
+        });
+
+        notification.Success(`${product.name} Added Your Cart`);
+    }
 
 </script>
 <template>
@@ -51,14 +79,14 @@
                             {{ $filters.currencySymbol(product.price) }}</span>
                     </div>
                     <div class="price-box" v-else>
-                        <span class="new-price new-price-2">{{ $filters.currencySymbol(price.toFixed()) }}</span>
+                        <span class="new-price new-price-2">{{ $filters.currencySymbol(offer_price.toFixed()) }}</span>
                         <span class="old-price">{{ $filters.currencySymbol(product.price) }}</span>
                         <span class="discount-percentage">- {{ product.discount }}%</span>
                     </div>
                 </div>
                 <div class="add-actions">
                     <ul class="add-actions-link">
-                        <li class="add-cart active"><a href="#"><i class="fa-solid fa-cart-plus"></i> Cart</a></li>
+                        <li class="add-cart active anim-cart" :class="{animCart: loading==product.id}"><a href="#"  @click.prevent="addToCart(product)"><i class="fas fa-spinner fa-spin" v-if="loading==product.id"></i><i class="fa-solid fa-cart-plus" v-else></i> Cart</a></li>
                         <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
                         <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
                     </ul>
@@ -71,5 +99,34 @@
 <style>
     .quick-view-btn{
         cursor: pointer ;
+    }
+    .animCart a{
+        position: relative;
+        z-index: 99;
+        color: #fff !important;
+    }
+    .animCart {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .anim-cart::before {
+        content: '';
+        position: absolute;
+        width: 0%;
+        height: 100%;
+        background-color: green;
+        top: 0;
+        left: 0;
+        border-radius: 3px;
+        transition: width 1s;
+        z-index: 9;
+        opacity: 0;
+    }
+
+    .animCart::before {
+        width: 100%;
+        opacity: 1;
+        transition: 1s;
     }
 </style>

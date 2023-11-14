@@ -19,7 +19,6 @@ pinia.use(createPersistedState());
 app.use(router);
 app.use(pinia);
 app.use(ElementPlus);
-app.mount('#app')
 
 app.config.globalProperties.$filters={
     currencySymbol(value){
@@ -30,3 +29,5 @@ app.config.globalProperties.$filters={
         return   "http://127.0.0.1:8000/" + image;
     }
 }
+
+app.mount('#app')

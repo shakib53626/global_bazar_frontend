@@ -1,6 +1,6 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {useThemeSetting, useAuth, useNotification, useCategories} from '@/stores'
+    import {useThemeSetting, useAuth, useNotification, useCategories, useCart} from '@/stores'
     import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
     
@@ -9,7 +9,9 @@
     const auth          = useAuth();
     const notification  = useNotification();
     const category      = useCategories();
+    const cart          = useCart();
     const {categories}  = storeToRefs(category);
+    const {cartItems, cartItemsCount, totalPrice}   = storeToRefs(cart);
     const {user, logoutLoading} = storeToRefs(auth);
     const {themesInfo, currency, language} = storeToRefs(themeInfo);
 
@@ -20,7 +22,7 @@
         $('.hm-minicart-trigger').toggleClass('is-active');
     }
     
-    const loginToggole = () =>{
+    const loginToggle = () =>{
         $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
         $('.ht-setting-trigger').toggleClass('is-active');
     }
@@ -36,6 +38,10 @@
         }
         $('.ht-setting-trigger').siblings('.ht-setting, .ht-currency, .ht-language, .minicart, .cw-sub-menu li').slideToggle();
         $('.ht-setting-trigger').toggleClass('is-active');
+    }
+
+    const deleteItem = (itemId) =>{
+        cart.deleteItem(itemId)
     }
 
     onMounted(() => {
@@ -65,12 +71,12 @@
                                 <ul class="ht-menu">
                                     <!-- Begin Setting Area -->
                                     <li>
-                                        <div class="ht-setting-trigger" @click="loginToggole"><span>Setting</span></div>
+                                        <div class="ht-setting-trigger" @click="loginToggle"><span>Setting</span></div>
                                         <div class="setting ht-setting">
                                             <ul class="ht-setting-list">
-                                                <li><router-link :to="{name:'my-account'}" @click="loginToggole" v-if="user.data">My Account</router-link></li>
-                                                <li><router-link :to="{name:'login'}" @click="loginToggole" v-if="!user.data">Sign In</router-link></li>
-                                                <li><router-link :to="{name:'register'}" @click="loginToggole" v-if="!user.data">Sing Up</router-link></li>
+                                                <li><router-link :to="{name:'my-account'}" @click="loginToggle" v-if="user.data">My Account</router-link></li>
+                                                <li><router-link :to="{name:'login'}" @click="loginToggle" v-if="!user.data">Sign In</router-link></li>
+                                                <li><router-link :to="{name:'register'}" @click="loginToggle" v-if="!user.data">Sing Up</router-link></li>
                                                 <li>
                                                     <a href="" @click.prevent="userLogout" v-if="user.data">
                                                         <span v-if="logoutLoading"><i class="fas fa-spinner fa-spin"></i> Loading</span>
@@ -135,39 +141,27 @@
                                     <li class="hm-minicart">
                                         <div class="hm-minicart-trigger" @click="cartBox">
                                             <span class="item-icon"></span>
-                                            <span class="item-text">£80.00
-                                                <span class="cart-item-count">2</span>
+                                            <span class="item-text">{{ $filters.currencySymbol(totalPrice) }}
+                                                <span class="cart-item-count">{{ cartItemsCount }}</span>
                                             </span>
                                         </div>
                                         <span></span>
                                         <div class="minicart">
                                             <ul class="minicart-product-list">
-                                                <li>
-                                                    <a href="single-product.html" class="minicart-product-image">
-                                                        <img src="@/assets/images/product/small-size/5.jpg" alt="cart products">
-                                                    </a>
+                                                <li v-for="(item, index) in cartItems" :key="index">
+                                                    <router-link :to="{ name: 'product-details', params: { slug: item.slug } }" class="minicart-product-image">
+                                                        <img :src="$filters.makeImgPath(item.thumbnail)" alt="cart products">
+                                                    </router-link>
                                                     <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                        <span>£40 x 1</span>
+                                                        <h6><a href="single-product.html">{{ item.name }}</a></h6>
+                                                        <span>{{ $filters.currencySymbol(item.price) }} x {{item.quantity}}</span>
                                                     </div>
-                                                    <button class="close" title="Remove">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <a href="single-product.html" class="minicart-product-image">
-                                                        <img src="@/assets/images/product/small-size/6.jpg" alt="cart products">
-                                                    </a>
-                                                    <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                        <span>£40 x 1</span>
-                                                    </div>
-                                                    <button class="close" title="Remove">
+                                                    <button class="close" title="Remove" @click.prevent="deleteItem(item.id)">
                                                         <i class="fa fa-close"></i>
                                                     </button>
                                                 </li>
                                             </ul>
-                                            <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
+                                            <p class="minicart-total">SUBTOTAL: <span>{{ $filters.currencySymbol(totalPrice) }}</span></p>
                                             <div class="minicart-button">
                                                 <router-link :to="{name: 'cart'}" class="li-button li-button-fullwidth li-button-dark" @click="cartBox">
                                                     <span>View Full Cart</span>
@@ -247,5 +241,24 @@
     .megamenu{
         display: grid;
         grid-template-columns: auto auto auto auto;
+    }
+
+    .minicart-product-list {
+        max-height: 272px;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+    }
+
+    .minicart-product-list::-webkit-scrollbar {
+        width: 5px !important;
+    }
+
+    .minicart-product-list::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+    }
+
+    .minicart-product-list::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
     }
 </style>
