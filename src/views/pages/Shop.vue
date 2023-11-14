@@ -1,6 +1,6 @@
 <script setup>
     import {ref, onMounted} from 'vue'
-    import {QuickViewModal, Products} from '@/components/comon';
+    import {QuickViewModal, Products} from '@/components';
     import {useProducts} from '@/stores'
     import { storeToRefs } from 'pinia';
 

@@ -5,6 +5,7 @@ import './style.css'
 import './template.js'
 import 'element-plus/dist/index.css'
 import 'nprogress/nprogress.css'
+import "skeleton-screen-css";
 import App from './App.vue'
 import { createPersistedState } from 'pinia-plugin-persistedstate';
 import router from './router'
@@ -26,6 +27,6 @@ app.config.globalProperties.$filters={
     },
 
     makeImgPath(image){
-        return  axios.defaults.baseURL + "/" + image;
+        return   "http://127.0.0.1:8000/" + image;
     }
 }

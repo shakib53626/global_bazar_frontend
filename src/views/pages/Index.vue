@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import {useProducts, useSlider, useOfferBanner} from '@/stores'
-import {QuickViewModal, Products} from '@/components/comon';
+import {QuickViewModal, Products, SliderSkeleton, ProductSkeleton, OfferBannerSkalaton} from '@/components';
 import { storeToRefs } from 'pinia';
 
 //Swiper ja Code Here ************************************************************************
@@ -22,28 +22,28 @@ const {offersBanner} = storeToRefs(offerbanner);
 
 // Products show code here *********************************************************************
 const Product = useProducts();
-const {products, sale, popular, feature} = storeToRefs(Product);
+const {products, sale, popular, feature, productLoading} = storeToRefs(Product);
 
 // Products Tab Code HEre *******************************************************************
-const newProducts       = ref('active');
-const bestProducts      = ref();
-const feturedProducts   = ref();
+const newProducts     = ref('active');
+const bestProducts    = ref();
+const feturedProducts = ref();
 
 const showTabItem = (type) =>{
     if(type=='new'){
-        newProducts.value = 'active';
-        bestProducts.value = '';
+        newProducts.value     = 'active';
+        bestProducts.value    = '';
         feturedProducts.value = '';
     }
     else if(type=='best'){
-        bestProducts.value = 'active';
-        newProducts.value = '';
+        bestProducts.value    = 'active';
+        newProducts.value     = '';
         feturedProducts.value = '';
 
     }else{
         feturedProducts.value = 'active';
-        newProducts.value = '';
-        bestProducts.value = '';
+        newProducts.value     = '';
+        bestProducts.value    = '';
     }
 }
 
@@ -92,28 +92,33 @@ onMounted(() => {
                     <div class="col-lg-12 col-md-12">
                         <div class="slider-area">
                             
-                            <swiper
-                                :cssMode="true"
-                                :loop="true"
-                                :autoplay="{
-                                    delay: 3000,
-                                }"
-                                :navigation="true"
-                                :pagination="true"
-                                :mousewheel="true"
-                                :keyboard="true"
-                                :modules="modules"
-                                class="mySwiper"
-                            >
-                                <swiper-slide v-for="(slider, index) in sliders" :key="index">
-                                    <div class="single-slide align-center-left animation-style-02 bg-2">
-                                        <div class="slider-progress"></div>
-                                        <div class="slider-content">
-                                            <img :src="$filters.makeImgPath(slider.image)" alt="">
+                            <templete v-if="!sliders.data">
+                                <SliderSkeleton/>
+                            </templete>
+                            <templete v-else>
+                                <swiper
+                                    :cssMode="true"
+                                    :loop="true"
+                                    :autoplay="{
+                                        delay: 3000,
+                                    }"
+                                    :navigation="true"
+                                    :pagination="true"
+                                    :mousewheel="true"
+                                    :keyboard="true"
+                                    :modules="modules"
+                                    class="mySwiper"
+                                >
+                                    <swiper-slide v-for="(slider, index) in sliders.data" :key="index">
+                                        <div class="single-slide align-center-left animation-style-02 bg-2">
+                                            <div class="slider-progress"></div>
+                                            <div class="slider-content">
+                                                <img :src="$filters.makeImgPath(slider.image)" alt="">
+                                            </div>
                                         </div>
-                                    </div>
-                                </swiper-slide>
-                            </swiper>
+                                    </swiper-slide>
+                                </swiper>
+                            </templete>
                         </div>
                     </div>
                 </div>
@@ -137,24 +142,28 @@ onMounted(() => {
                 </div>
                 <div class="tab-content">
                     <div id="li-new-product" class="tab-pane show" role="tabpanel" :class="newProducts">
-                        <div class="product-active mt-2">
+                        <div class="product-active mt-3">
+                            <templete v-if="productLoading">
+                                <ProductSkeleton :dataAmount="5"/>
+                            </templete>
+                            <templete v-else>
+                                <swiper
+                                    :slidesPerView="5"
+                                    :loop=true
+                                    :autoplay="{
+                                        delay: 5000,
+                                    }"
+                                    :modules="modules"
+                                    class="mySwiper"
+                                >
+                                    <swiper-slide v-for="(product, index) in sale" :key="index">
+                                        <div class="col-lg-12">
+                                            <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                        </div>
+                                    </swiper-slide>
 
-                            <swiper
-                                :slidesPerView="5"
-                                :loop=true
-                                :autoplay="{
-                                    delay: 5000,
-                                }"
-                                :modules="modules"
-                                class="mySwiper"
-                            >
-                                <swiper-slide v-for="(product, index) in sale" :key="index">
-                                    <div class="col-lg-12">
-                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
-                                    </div>
-                                </swiper-slide>
-                            </swiper>
-
+                                </swiper>
+                            </templete>
                         </div>
                     </div>
                     <div id="li-bestseller-product" class="tab-pane" role="tabpanel" :class="bestProducts">
@@ -205,13 +214,19 @@ onMounted(() => {
         <div class="li-static-banner">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 text-center" v-for="(offerBanner, index) in offersBanner" :key="index">
-                        <div class="single-banner">
-                            <a href="#">
-                                <img :src="offerBanner.image" alt="Li's Static Banner">
-                            </a>
-                        </div>
+                    <div class="col-lg-4 col-md-4 text-center mb-4" v-for="(offerBanner, index) in offersBanner" :key="index">
+                        <templete v-if="offersBanner">
+                            <div class="single-banner">
+                                <a href="#">
+                                    <img :src="offerBanner.image" alt="Li's Static Banner">
+                                </a>
+                            </div>
+                        </templete>
+                        <templete v-else>
+                            <OfferBannerSkalaton :dataAmount="3"/>
+                        </templete>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -233,22 +248,27 @@ onMounted(() => {
                             </ul>
                         </div>
                         <div class="product-active">
+                            <templete v-if="productLoading">
+                                <ProductSkeleton :dataAmount="5"/>
+                            </templete>
+                            <templete v-else>
+                                <swiper
+                                    :slidesPerView="5"
+                                    :loop=true
+                                    :autoplay="{
+                                        delay: 5000,
+                                    }"
+                                    :modules="modules"
+                                    class="mySwiper"
+                                >
+                                    <swiper-slide v-for="(product, index) in sale" :key="index">
+                                        <div class="col-lg-12">
+                                            <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                        </div>
+                                    </swiper-slide>
 
-                            <swiper
-                                :slidesPerView="5"
-                                :loop=true
-                                :autoplay="{
-                                    delay: 5000,
-                                }"
-                                :modules="modules"
-                                class="mySwiper"
-                            >
-                                <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <div class="col-lg-12">
-                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
-                                    </div>
-                                </swiper-slide>
-                            </swiper>
+                                </swiper>
+                            </templete>
                         </div>
                     </div>
                     <!-- Li's Section Area End Here -->
@@ -273,22 +293,27 @@ onMounted(() => {
                             </ul>
                         </div>
                         <div class="product-active">
+                            <templete v-if="productLoading">
+                                <ProductSkeleton :dataAmount="5"/>
+                            </templete>
+                            <templete v-else>
+                                <swiper
+                                    :slidesPerView="5"
+                                    :loop=true
+                                    :autoplay="{
+                                        delay: 5000,
+                                    }"
+                                    :modules="modules"
+                                    class="mySwiper"
+                                >
+                                    <swiper-slide v-for="(product, index) in sale" :key="index">
+                                        <div class="col-lg-12">
+                                            <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                        </div>
+                                    </swiper-slide>
 
-                            <swiper
-                                :slidesPerView="5"
-                                :loop=true
-                                :autoplay="{
-                                    delay: 5000,
-                                }"
-                                :modules="modules"
-                                class="mySwiper"
-                            >
-                                <swiper-slide v-for="(product, index) in products" :key="index">
-                                    <div class="col-lg-12">
-                                        <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
-                                    </div>
-                                </swiper-slide>
-                            </swiper>
+                                </swiper>
+                            </templete>
                         </div>
                     </div>
                 </div>

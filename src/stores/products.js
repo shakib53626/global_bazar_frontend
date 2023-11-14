@@ -7,12 +7,14 @@ export const useProducts = defineStore('products', {
         sale: [],
         popular:[],
         feature:[],
+        productLoading:false,
     }),
     getters: {
 
     },
     actions: {
         async getProductsData(type=''){
+            this.productLoading = true;
             try {
                 const res = await axios.get(`/products?conditions=${type}`);
                 
@@ -29,6 +31,8 @@ export const useProducts = defineStore('products', {
                 }
             } catch (error) {
                 console.log(error);
+            }finally{
+                this.productLoading = false;
             }
         }
     },
