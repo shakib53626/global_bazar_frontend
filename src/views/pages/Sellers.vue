@@ -1,4 +1,15 @@
-<script>
+<script setup>
+import {useSellers} from '@/stores'
+import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue';
+
+const seller    = useSellers();
+const {sellers} = storeToRefs(seller);
+
+onMounted(()=>{
+    // seller.getSellers();
+})
+
 </script>
 <template>
     <div>
@@ -21,11 +32,15 @@
                             <div class="col-lg-2 col-md-2 sellers-body">
                                 <div class="li-blog-single-item">
                                     <div class="li-blog-banner">
-                                        <a href="blog-details-left-sidebar.html"><img class="img-full" src="@/assets/images/blog-banner/2.jpg" alt=""></a>
+                                        <a href="blog-details-left-sidebar.html">
+                                            <img class="img-full" src="seller.image" alt="">
+                                        </a>
                                     </div>
                                     <div class="li-blog-content">
                                         <div class="li-blog-details text-center">
-                                            <h5 class="li-blog-heading seller-title"><a href="blog-details-left-sidebar.html">blog image post</a></h5>
+                                            <h5 class="li-blog-heading seller-title">
+                                                <a href="blog-details-left-sidebar.html"></a>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
