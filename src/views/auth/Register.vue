@@ -133,7 +133,7 @@
                                         <span class="d-flex align-items-center"><input type="checkbox" class="my-auto me-2" @click="toggleShow"> Show Password</span>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between">
-                                        <button class="register-button mt-0" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading</button>
+                                        <button class="register-button mt-0" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading...</button>
                                         <button class="register-button mt-0" v-else>Register</button>
                                         <p>If you have any acount ? <router-link :to="{name:'login'}">Login</router-link></p>
                                     </div>

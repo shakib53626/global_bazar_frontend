@@ -15,6 +15,7 @@ import Checkout from '../views/pages/Checkout.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import MyAccount from '../views/auth/MyAccount.vue'
+import Sellers from '../views/pages/Sellers.vue'
 
 
 const routes =[	
@@ -96,12 +97,22 @@ const routes =[
       component: MyAccount,
       meta: { title: 'My Account', requiresAuth: true }
     },
+    {
+      path: '/sellers',
+      name: 'sellers',
+      component: Sellers,
+      meta: { title: 'Sellers' }
+    },
   ];
 
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior() {
+    // always scroll to top
+    return { top: 0, behavior:"smooth" }
+  },
 })
 
 const DEFAULT_TITLE = "404";

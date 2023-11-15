@@ -111,33 +111,24 @@
             <div class="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
                 <div class="container">
                     <div class="row">
-                        <!-- Begin Header Logo Area -->
                         <div class="col-lg-3">
                             <div class="logo pb-sm-30 pb-xs-30">
                                 <router-link :to="{name: 'home'}"><img :src="themesInfo.logo_image" alt=""></router-link>
                             </div>
                         </div>
-                        <!-- Header Logo Area End Here -->
-                        <!-- Begin Header Middle Right Area -->
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
-                            <!-- Begin Header Middle Searchbox Area -->
                             <form action="#" class="hm-searchbox">
                                 <input type="text" placeholder="Enter your search key ...">
                                 <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
                             </form>
-                            <!-- Header Middle Searchbox Area End Here -->
-                            <!-- Begin Header Middle Right Area -->
                             <div class="header-middle-right">
                                 <ul class="hm-menu">
-                                    <!-- Begin Header Middle Wishlist Area -->
-                                    <li class="hm-wishlist">
+                                    <li class="hm-wishlist" v-if="user.data">
                                         <router-link :to="{name:'wishlist'}">
-                                            <span class="cart-item-count wishlist-item-count">0</span>
+                                            <span class="cart-item-count wishlist-item-count">{{ user.meta.wishlists.length }}</span>
                                             <i class="fa fa-heart-o"></i>
                                         </router-link>
                                     </li>
-                                    <!-- Header Middle Wishlist Area End Here -->
-                                    <!-- Begin Header Mini Cart Area -->
                                     <li class="hm-minicart">
                                         <div class="hm-minicart-trigger" @click="cartBox">
                                             <span class="item-icon"></span>
@@ -179,12 +170,9 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <!-- Header Mini Cart Area End Here -->
                                 </ul>
                             </div>
-                            <!-- Header Middle Right Area End Here -->
                         </div>
-                        <!-- Header Middle Right Area End Here -->
                     </div>
                 </div>
             </div>
@@ -192,7 +180,6 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
-                            <!-- Begin Header Bottom Menu Area -->
                             <div class="hb-menu">
                                 <nav>
                                     <ul>
@@ -214,6 +201,7 @@
                                                 </li>
                                             </ul>
                                         </li>
+                                        <li class="dropdown-holder"><router-link :to="{name: 'sellers'}">Sellers</router-link></li>
                                         <li class="dropdown-holder"><router-link :to="{name: 'blog'}">Blog</router-link></li>
                                         <li><router-link :to="{name: 'about'}">About Us</router-link></li>
                                         <li><router-link :to="{name: 'contact'}">Contact</router-link></li>

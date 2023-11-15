@@ -1,9 +1,11 @@
 <script setup>
-    import { useCart, useNotification } from '@/stores';
+    import { useCart, useNotification, useAuth, useWishlist } from '@/stores';
     import { storeToRefs } from 'pinia';
     import { ref } from 'vue';
 
     const cart         = useCart();
+    const auth         = useAuth();
+    const wishlist     = useWishlist();
     const notification = useNotification();
     const {loading}    = storeToRefs(cart);
     const price        = ref();
@@ -42,8 +44,19 @@
     }
 
 
-    const addToWishlist = () =>{
-        $("#LoginMOdal").modal("show");
+    const addToWishlist = async(product) =>{
+        if(auth.user.data){
+            let res = await wishlist.addToWishlist(product);
+            if(res){
+                if(res.status==201){
+                    notification.Success(`${product.name} Added Your Wishlist`);
+                }else{
+                    notification.Success(`${product.name} Remove For Your Wishlist`);
+                }
+            }
+        }else{
+            $("#LoginMOdal").modal("show");
+        }
     }
 </script>
 <template>
@@ -90,8 +103,18 @@
                 </div>
                 <div class="add-actions">
                     <ul class="add-actions-link">
-                        <li class="add-cart active anim-cart" :class="{animCart: loading==product.id}"><a href="#"  @click.prevent="addToCart(product)"><i class="fas fa-spinner fa-spin" v-if="loading==product.id"></i><i class="fa-solid fa-cart-plus" v-else></i> Cart</a></li>
-                        <li><a class="links-details" @click.prevent="addToWishlist(product)"><i class="fa fa-heart-o"></i></a></li>
+                        <li class="add-cart active anim-cart" :class="{animCart: loading==product.id}">
+                            <a href="#"  @click.prevent="addToCart(product)">
+                                <i class="fas fa-spinner fa-spin" v-if="loading==product.id"></i>
+                                <i class="fa-solid fa-cart-plus" v-else></i> Cart
+                            </a>
+                        </li>
+                        <li class="anim-cart" :class="{animCart: wishlist.wishlistLoading==product.id}">
+                            <a class="links-details" @click.prevent="addToWishlist(product)">
+                                <i class="fas fa-spinner fa-spin" v-if="wishlist.wishlistLoading==product.id"></i>
+                                <i class="fa fa-heart-o" v-else></i>
+                            </a>
+                        </li>
                         <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
                     </ul>
                 </div>
@@ -123,7 +146,7 @@
         top: 0;
         left: 0;
         border-radius: 3px;
-        transition: width 1s;
+        transition: width 0.5s;
         z-index: 9;
         opacity: 0;
     }
@@ -131,6 +154,9 @@
     .animCart::before {
         width: 100%;
         opacity: 1;
-        transition: 1s;
+        transition: 0.5s;
+    }
+    .links-details{
+        cursor: pointer;
     }
 </style>

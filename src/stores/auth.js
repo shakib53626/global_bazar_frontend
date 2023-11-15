@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { defineStore } from 'pinia';
+import axiosInstance from '../service/axiosService';
 
 export const useAuth = defineStore("auth", {
     state:() => ({ 
@@ -15,10 +15,9 @@ export const useAuth = defineStore("auth", {
      actions:{
         async login(formData){
             try {
-                const res = await axios.post('/user/login', formData);
+                const res = await axiosInstance.post('/user/login', formData);
                 if(res.status === 200){
                     this.user = res.data;
-
                     return new Promise((resolve) => {
                         resolve(res.data);
                     });
@@ -34,8 +33,7 @@ export const useAuth = defineStore("auth", {
 
         async register(formData){
             try {
-                const res = await axios.post('/user/register', formData);
-                console.log(res);
+                const res = await axiosInstance.post('/user/register', formData);
                 if(res.status === 201){
                     this.user = res.data;
                     return new Promise((resolve) => {
@@ -53,7 +51,7 @@ export const useAuth = defineStore("auth", {
         
         async otpVerify(verifyData){
             try {
-                const res = await axios.post('/user/otp-verify', verifyData);
+                const res = await axiosInstance.post('/user/otp-verify', verifyData);
                 console.log(res.data);
                 if(res.status === 200){
                     this.user = res.data;
@@ -73,13 +71,7 @@ export const useAuth = defineStore("auth", {
         async logout(){
             this.logoutLoading = true;
             try {
-                const token = this.user.meta.token;
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.post('user/logout', null, config);
+                const res = await axiosInstance.post('user/logout');
                 if(res.status === 200){
                     this.user = {};
                     return new Promise((resolve) => {

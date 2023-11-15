@@ -10,7 +10,9 @@ export const useCategories = defineStore('categories',{
         async getCaegories(){
             try {
                 const res = await axios.get('/categories');
-                this.categories = res.data.data
+                if(res.status === 200){
+                    this.categories = res.data.data
+                }
             } catch (error) {
                 console.log(error);
             }

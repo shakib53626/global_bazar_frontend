@@ -97,7 +97,7 @@
                                         <p><router-link :to="{name:'register'}">Register Here</router-link></p>
                                     </div>
                                     <div class="col-md-12">
-                                        <button class="register-button mt-0" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading</button>
+                                        <button class="register-button mt-0" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading...</button>
                                         <button class="register-button mt-0" v-else>Login</button>
                                     </div>
                                 </div>

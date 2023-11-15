@@ -65,7 +65,7 @@
                                         <p><input type="checkbox" @click="toggleShow" style="width: 15px;height: 15px;"> Show Password</p>
                                         <p><router-link :to="{name:'register'}"><span data-bs-dismiss="modal" aria-label="Close">Register</span></router-link></p>
                                     </div>
-                                    <button class="btn btn-info" style="width: 150px;" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading</button>
+                                    <button class="btn btn-info" style="width: 150px;" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading...</button>
                                     <button class="btn btn-info" style="width: 150px;" v-else>Login</button>
                                 </div>
                             </Form>
