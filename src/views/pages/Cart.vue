@@ -1,4 +1,21 @@
-<script>
+<script setup>
+    import { storeToRefs } from 'pinia';
+    import {useCart} from '@/stores'
+
+    const cart = useCart();
+    const {cartItems, totalPrice, cartItemsCount} = storeToRefs(cart);
+
+    const deleteItem = (itemId) =>{
+        cart.deleteItem(itemId);
+    }
+
+    const addQuantity = (itemId) =>{
+        cart.addQuantity(itemId);
+    }
+    
+    const minusQuantity = (itemId) =>{
+        cart.minusQuantity(itemId);
+    }
 </script>
 <template>
     <div>
@@ -33,40 +50,33 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="li-product-remove"><a href="#"><i class="fa fa-times"></i></a></td>
-                                            <td class="li-product-thumbnail"><a href="#"><img src="@/assets/images/product/small-size/5.jpg" alt="Li's Product Image"></a></td>
-                                            <td class="li-product-name"><a href="#">Accusantium dolorem1</a></td>
-                                            <td class="li-product-price"><span class="amount">$46.80</span></td>
+                                        <tr v-for="(item, index) in cartItems" :key="index">
+                                            <td class="li-product-remove"><a href="#" @click.prevent="deleteItem(item.id)"><i class="fa fa-times"></i></a></td>
+                                            <td class="li-product-thumbnail"><a href="#"><img :src="$filters.makeImgPath(item.thumbnail)" width="80" alt="Li's Product Image"></a></td>
+                                            <td class="li-product-name"><a href="#">{{ item.name }}</a></td>
+                                            <td class="li-product-price"><span class="amount">{{ $filters.currencySymbol(item.price) }}</span></td>
                                             <td class="quantity">
                                                 <label>Quantity</label>
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                    <input class="cart-plus-minus-box" :value="item.quantity" type="text" disabled>
+                                                    <div class="dec qtybutton" @click="minusQuantity(item.id)"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton" @click="addQuantity(item.id)"><i class="fa fa-angle-up"></i></div>
                                                 </div>
                                             </td>
-                                            <td class="product-subtotal"><span class="amount">$70.00</span></td>
+                                            <td class="product-subtotal"><span class="amount">{{ $filters.currencySymbol(item.quantity*item.price) }}</span></td>
                                         </tr>
-                                        <tr>
-                                            <td class="li-product-remove"><a href="#"><i class="fa fa-times"></i></a></td>
-                                            <td class="li-product-thumbnail"><a href="#"><img src="@/assets/images/product/small-size/6.jpg" alt="Li's Product Image"></a></td>
-                                            <td class="li-product-name"><a href="#">Mug Today is a good day</a></td>
-                                            <td class="li-product-price"><span class="amount">$71.80</span></td>
-                                            <td class="quantity">
-                                                <label>Quantity</label>
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="1" type="text">
-                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
-                                                </div>
+                                        <tr v-if="cartItems.length<1">
+                                            <td colspan="1">
+                                                <img src="@/assets/images/basket.png" width="50" alt="">
                                             </td>
-                                            <td class="product-subtotal"><span class="amount">$60.50</span></td>
+                                            <td colspan="5">
+                                                <h3 class="text-danger">Your Cart is Empty</h3>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-12">
                                     <div class="coupon-all">
                                         <div class="coupon">
@@ -78,16 +88,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-5 ml-auto">
                                     <div class="cart-page-total">
                                         <h2>Cart totals</h2>
                                         <ul>
-                                            <li>Subtotal <span>$130.00</span></li>
-                                            <li>Total <span>$130.00</span></li>
+                                            <li>Subtotal <span>{{ $filters.currencySymbol(totalPrice) }}</span></li>
+                                            <li>Total <span>{{ $filters.currencySymbol(totalPrice) }}</span></li>
                                         </ul>
-                                        <a href="#">Proceed to checkout</a>
+                                        <router-link :to="{name:'checkout'}">Proceed to checkout</router-link>
                                     </div>
                                 </div>
                             </div>

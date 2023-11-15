@@ -147,20 +147,27 @@
                                         </div>
                                         <span></span>
                                         <div class="minicart">
-                                            <ul class="minicart-product-list">
-                                                <li v-for="(item, index) in cartItems" :key="index">
-                                                    <router-link :to="{ name: 'product-details', params: { slug: item.slug } }" class="minicart-product-image">
-                                                        <img :src="$filters.makeImgPath(item.thumbnail)" alt="cart products">
-                                                    </router-link>
-                                                    <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">{{ item.name }}</a></h6>
-                                                        <span>{{ $filters.currencySymbol(item.price) }} x {{item.quantity}}</span>
-                                                    </div>
-                                                    <button class="close" title="Remove" @click.prevent="deleteItem(item.id)">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </li>
+                                            <ul class="minicart-product-list" v-if="cartItems.length>0">
+                                                <TransitionGroup name="list" tag="ul">
+                                                    <li v-for="item in cartItems" :key="item.id">
+                                                        <router-link :to="{ name: 'product-details', params: { slug: item.slug } }" class="minicart-product-image">
+                                                            <img :src="$filters.makeImgPath(item.thumbnail)" width="45" alt="cart products">
+                                                        </router-link>
+                                                        <div class="minicart-product-details">
+                                                            <h6><a href="single-product.html">{{ item.name }}</a></h6>
+                                                            <span>{{ $filters.currencySymbol(item.price) }} x {{item.quantity}}</span>
+                                                        </div>
+                                                        <button class="close" title="Remove" @click.prevent="deleteItem(item.id)">
+                                                            <i class="fa fa-close"></i>
+                                                        </button>
+                                                    </li>
+                                                </TransitionGroup>
+                                                
                                             </ul>
+                                            <div class="text-center" v-else>
+                                                <img src="@/assets/images/basket.png" width="100" alt="">
+                                                <h3 class="text-danger">Your Cart is Empty</h3>
+                                            </div>
                                             <p class="minicart-total">SUBTOTAL: <span>{{ $filters.currencySymbol(totalPrice) }}</span></p>
                                             <div class="minicart-button">
                                                 <router-link :to="{name: 'cart'}" class="li-button li-button-fullwidth li-button-dark" @click="cartBox">
@@ -260,5 +267,22 @@
 
     .minicart-product-list::-webkit-scrollbar-track {
         background-color: #f1f1f1;
+    }
+    .list-move, /* apply transition to moving elements */
+    .list-enter-active,
+    .list-leave-active {
+    transition: all 0.5s ease;
+    }
+
+    .list-enter-from,
+    .list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+    }
+
+    /* ensure leaving items are taken out of layout flow so that moving
+    animations can be calculated correctly. */
+    .list-leave-active {
+    position: absolute;
     }
 </style>

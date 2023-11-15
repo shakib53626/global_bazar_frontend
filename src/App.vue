@@ -1,5 +1,5 @@
 <script setup>
-    import {Header, Footer} from '@/components';
+    import {Header, Footer, LoginModal} from '@/components';
 </script>
 
 <template>
@@ -14,6 +14,7 @@
       </transition>
     </router-view>
     
+    <LoginModal/>
     <!-- Begin Footer Area -->
     <Footer/>
     <!-- Quick View | Modal Area End Here -->

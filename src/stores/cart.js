@@ -44,6 +44,20 @@ export const useCart = defineStore('cart',{
         async deleteItem(itemId){
             let index = this.cartItems.findIndex((i)=> i.id === itemId);
             this.cartItems.splice(index, 1);
+        },
+        
+        async addQuantity(itemId){
+            let index = this.cartItems.findIndex((i)=> i.id === itemId);
+            if(this.cartItems[index]['quantity'] !== 10){
+                this.cartItems[index]['quantity'] += 1;
+            }
+        },
+        
+        async minusQuantity(itemId){
+            let index = this.cartItems.findIndex((i)=> i.id === itemId);
+            if(this.cartItems[index]['quantity'] !== 1){
+                this.cartItems[index]['quantity'] -= 1;
+            }
         }
     }
 })

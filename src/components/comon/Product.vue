@@ -41,6 +41,10 @@
         notification.Success(`${product.name} Added Your Cart`);
     }
 
+
+    const addToWishlist = () =>{
+        $("#LoginMOdal").modal("show");
+    }
 </script>
 <template>
     <div>
@@ -87,7 +91,7 @@
                 <div class="add-actions">
                     <ul class="add-actions-link">
                         <li class="add-cart active anim-cart" :class="{animCart: loading==product.id}"><a href="#"  @click.prevent="addToCart(product)"><i class="fas fa-spinner fa-spin" v-if="loading==product.id"></i><i class="fa-solid fa-cart-plus" v-else></i> Cart</a></li>
-                        <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
+                        <li><a class="links-details" @click.prevent="addToWishlist(product)"><i class="fa fa-heart-o"></i></a></li>
                         <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
                     </ul>
                 </div>
