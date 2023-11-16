@@ -6,3 +6,5 @@ export { default as Products } from '@/components/comon/Product.vue';
 export { default as SliderSkeleton } from '@/components/skeleton/Slider.vue';
 export { default as ProductSkeleton } from '@/components/skeleton/Product.vue';
 export { default as OfferBannerSkalaton } from '@/components/skeleton/OfferBanner.vue';
+export { default as SellersSkalaton } from '@/components/skeleton/Sellers.vue';
+export { default as SellerStoreSkalaton } from '@/components/skeleton/SellerStore.vue';

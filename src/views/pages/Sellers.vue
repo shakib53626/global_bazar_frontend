@@ -1,11 +1,12 @@
 <script setup>
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import { SellersSkalaton } from '@/components'
 import {useSellers} from '@/stores'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue';
 
 const seller    = useSellers();
-const {sellers} = storeToRefs(seller);
+const {sellers, sellerLoader} = storeToRefs(seller);
 const itemAmount= ref(20);
 
 const getSellers = async(page=1) =>{
@@ -46,23 +47,29 @@ onMounted(()=>{
                             </div>
                         </div>
                         <div class="row li-main-content">
-                            <div class="col-lg-2 col-md-2 sellers-body me-4 mb-4" v-for="(seller, index) in sellers.data" :key="index">
-                                <div class="li-blog-single-item">
-                                    <div class="li-blog-banner">
-                                        <a href="blog-details-left-sidebar.html">
-                                            <img class="img-full" :src="seller.image" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="li-blog-content">
-                                        <div class="li-blog-details text-center">
-                                            <h5 class="li-blog-heading seller-title">
-                                                <a href="blog-details-left-sidebar.html">{{ seller.name }}</a>
-                                            </h5>
-                                            <p>{{ seller.products_count }} Products</p>
-                                            <router-link :to="{name:'seller_store', params:{slug: seller.slug}}" class="btn btn-info" style="width: 100%;">Visit Store</router-link>
+                            <div class="col-lg-2 col-md-2 sellers-body me-4 mb-4 ms-auto" v-for="(seller, index) in sellers.data" :key="index">
+                                <template v-if="sellerLoader">
+                                    <SellersSkalaton/>
+                                </template>
+
+                                <template v-else>
+                                    <div class="li-blog-single-item">
+                                        <div class="li-blog-banner">
+                                            <router-link :to="{name:'seller_store', params:{slug: seller.slug}}">
+                                                <img class="img-full" :src="$filters.makeImgPath(seller.image)" alt="">
+                                            </router-link>
+                                        </div>
+                                        <div class="li-blog-content">
+                                            <div class="li-blog-details text-center">
+                                                <h5 class="li-blog-heading seller-title">
+                                                    <router-link :to="{name:'seller_store', params:{slug: seller.slug}}">{{ seller.name }}</router-link>
+                                                </h5>
+                                                <p>{{ seller.products_count }} Products</p>
+                                                <router-link :to="{name:'seller_store', params:{slug: seller.slug}}" class="btn btn-info" style="width: 100%;">Visit Store</router-link>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </template>
                             </div>
                             <!-- Begin Li's Pagination Area -->
                             <div class="col-lg-12 mt-5">
@@ -112,11 +119,20 @@ onMounted(()=>{
         font-size: 16px;
         font-weight: 500;
     }
+    .page-link{
+        color: #000;
+    }
     .page-item.active .page-link{
         background-color: transparent;
         border: 1px solid #dee2e6;
+        color: #17A2B8;
     }
+    
     .pagination{
-        justify-content: center;
+        justify-content: right;
+    }
+    .img-full{
+        max-width: 100%;
+        max-height: 170px;
     }
 </style>

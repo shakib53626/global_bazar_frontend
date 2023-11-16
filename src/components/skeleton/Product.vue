@@ -10,7 +10,7 @@
 </script>
 <template>
         <div class="col-lg-12 d-flex mb-4">
-            <div class="ssc ssc-card me-3" style="max-width: 300px" v-for="(data, index) in dataAmount" :key="index">
+            <div class="ssc ssc-card me-3 seller" style="max-width: 300px" v-for="(data, index) in dataAmount" :key="index">
                 <div class="ssc-wrapper">
                     <div class="ssc-square mb"></div>
                     <div class="flex align-center justify-between">
