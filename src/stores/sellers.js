@@ -7,12 +7,27 @@ export const useSellers = defineStore('sellers',{
     }),
 
     actions:{
-        async getSellers(){
+        async getSellers(page, showAmound){
             try {
-                const res = await axiosInstance.get('/sellers');
+                const res = await axiosInstance.get(`/sellers`,{
+                    params:{
+                        page : page,
+                        show : showAmound,
+                    }
+                });
                 if(res.status === 200){
-                    this.sellers = res.data.data
+                    this.sellers = res.data
                 }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async sellerProduct(sellerId){
+            console.log(sellerId);
+            try {
+                const res = await axiosInstance.get(`/seller/products/${sellerId}`);
+                console.log(res);
             } catch (error) {
                 console.log(error);
             }

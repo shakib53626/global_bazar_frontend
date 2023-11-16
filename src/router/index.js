@@ -16,6 +16,7 @@ import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import MyAccount from '../views/auth/MyAccount.vue'
 import Sellers from '../views/pages/Sellers.vue'
+import SellerStore from '../views/pages/SellerStore.vue'
 
 
 const routes =[	
@@ -102,6 +103,12 @@ const routes =[
       name: 'sellers',
       component: Sellers,
       meta: { title: 'Sellers' }
+    },
+    {
+      path: '/seller_store/:slug',
+      name: 'seller_store',
+      component: SellerStore,
+      meta: { title: 'Seller Store' }
     },
   ];
 
