@@ -9,7 +9,7 @@
     });
 </script>
 <template>
-        <div class="col-lg-12 d-flex mb-4">
+        <div class="col-lg-12 d-flex">
             <div class="ssc ssc-card me-3 seller" style="max-width: 220px" v-for="(data, index) in dataAmount" :key="index">
                 <div class="ssc-wrapper">
                     <div class="ssc-square mb"></div>

@@ -18,6 +18,8 @@
         shop.getProducts(page, show.value, sort.value);
     }
 
+    // Brand and Category Search Code 
+
     const searchBrand = computed(() => {
         return shop.sidebar.brands.filter((brand) => {
             return brand.name.toLowerCase().match(searchByBrand.value.toLowerCase());
@@ -29,6 +31,11 @@
             return category.name.toLowerCase().match(searchByCategory.value.toLowerCase());
         });
     });
+
+    // Brand and category and Price By Filter
+
+    const selectedBrand = ref([]);
+
     // For Quick View Modal ****************************************************
     let myModal;
     const selectedProduct =ref({
@@ -68,21 +75,21 @@
     const toggle = (event) => {
     const element = $(event.currentTarget).parent('li');
 
-    if (element.hasClass('open')) {
-        // If the submenu is open, close it
-        element.removeClass('open');
-        element.find('li').removeClass('open');
-        element.find('ul').slideUp();
-    } else {
-        // If the submenu is closed, open it
-        element.addClass('open');
-        element.children('ul').slideDown();
-        element.siblings('li').children('ul').slideUp();
-        element.siblings('li').removeClass('open');
-        element.siblings('li').find('li').removeClass('open');
-        element.siblings('li').find('ul').slideUp();
-    }
-};
+        if (element.hasClass('open')) {
+            // If the submenu is open, close it
+            element.removeClass('open');
+            element.find('li').removeClass('open');
+            element.find('ul').slideUp();
+        } else {
+            // If the submenu is closed, open it
+            element.addClass('open');
+            element.children('ul').slideDown();
+            element.siblings('li').children('ul').slideUp();
+            element.siblings('li').removeClass('open');
+            element.siblings('li').find('li').removeClass('open');
+            element.siblings('li').find('ul').slideUp();
+        }
+    };
 
     onMounted(() => {
         shop.getSidebarData();
@@ -230,6 +237,7 @@
                                                 <Bootstrap5Pagination
                                                     :data="products"
                                                     @pagination-change-page="getProducts"
+                                                    :limit="1"
                                                 >
                                                 <template #prev-nav>
                                                     <a class="Previous" href="#">Previous</a>
@@ -274,7 +282,7 @@
                                             </ul>
                                         </li>
                                         <li v-if="searchCategory.length == 0">
-                                            <img :src="$filters.makeImgPath('/nodata.png')" width="240" style="border-radius:20px" alt="">
+                                            <img :src="$filters.makeImgPath('/nodata.png')" width="230" style="border-radius:20px" alt="">
                                         </li>
                                     </ul>
                                 </div>
@@ -291,11 +299,11 @@
                                     <form action="#">
                                         <ul v-if="shop.sidebar.brands">
                                             <li v-for="(brand, index) in searchBrand" :key="index">
-                                                <input :id="`brand${index}`" type="checkbox" name="product-category">
+                                                <input :id="`brand${index}`" type="checkbox" name="product-category" v-model="selectedBrand">
                                                 <label :for="`brand${index}`" class="text-light ms-2" style="cursor: pointer;">{{brand.name}} ({{ brand.products_count }})</label>
                                             </li>
                                             <li v-if="searchBrand.length == 0">
-                                                <img :src="$filters.makeImgPath('/nodata.png')" width="240" style="border-radius:20px" alt="">
+                                                <img :src="$filters.makeImgPath('/nodata.png')" width="230" style="border-radius:20px" alt="">
                                             </li>
                                         </ul>
                                     </form>

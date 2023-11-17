@@ -16,7 +16,7 @@ export const useShop = defineStore('shop',{
                     params:{
                         page: page,
                         show: show,
-                        sort: sort,
+                        sort: sort, 
                     }
                 });
                 if(res.status === 200){

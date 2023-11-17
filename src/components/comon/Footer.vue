@@ -1,4 +1,7 @@
 <script setup>
+import { useThemeSetting } from '@/stores'
+
+const themeInfo = useThemeSetting();
 
 </script>
 
@@ -77,7 +80,7 @@
                             <!-- Begin Footer Logo Area -->
                             <div class="col-lg-4 col-md-6">
                                 <div class="footer-logo">
-                                    <img src="@/assets/images/menu/logo/1.jpg" alt="Footer Logo">
+                                    <img :src="themeInfo.themesInfo.logo_image" alt="Footer Logo">
                                     <p class="info">
                                         We are a team of designers and developers that create high quality HTML Template & Woocommerce, Shopify Theme.
                                     </p>
