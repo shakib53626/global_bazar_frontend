@@ -113,7 +113,7 @@
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="logo pb-sm-30 pb-xs-30">
-                                <router-link :to="{name: 'home'}"><img :src="themesInfo.logo_image" alt=""></router-link>
+                                <router-link :to="{name: 'home'}"><img :src="themesInfo.logo_image" width="200" alt=""></router-link>
                             </div>
                         </div>
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
@@ -272,5 +272,11 @@
     animations can be calculated correctly. */
     .list-leave-active {
     position: absolute;
+    }
+    .logo img{
+        position: absolute;
+        width: 230px;
+        top: -28px;
+        left: 0;
     }
 </style>

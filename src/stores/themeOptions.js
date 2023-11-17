@@ -17,7 +17,7 @@ export const useThemeSetting = defineStore('themeSetting', {
             try {
                 this.themesInfo = {
                     phone_number: '+880 178 480 1663',
-                    logo_image: './src/assets/images/menu/logo/1.jpg',
+                    logo_image: './src/assets/images/menu/logo/logo.png',
                 }
             } catch (error) {
                 console.log(error);

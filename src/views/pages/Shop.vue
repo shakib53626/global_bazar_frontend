@@ -1,14 +1,34 @@
 <script setup>
-    import {ref, onMounted} from 'vue'
-    import {QuickViewModal, Products} from '@/components';
-    import {useProducts} from '@/stores'
+    import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+    import {ref, onMounted, computed} from 'vue'
+    import {QuickViewModal, Products, ProductSkeleton, SidebarSkalaton} from '@/components';
+    import {useShop} from '@/stores'
     import { storeToRefs } from 'pinia';
 
 
     // Products show code here *********************************************************************
-    const Product = useProducts();
-    const {products} = storeToRefs(Product);
+    const sort             = ref('default');
+    const show             = ref(48);
+    const shop             = useShop();
+    const searchByBrand    = ref("");
+    const searchByCategory = ref("");
+    const {products, loader, sidebar} = storeToRefs(shop);
 
+    const getProducts = (page = 1) =>{
+        shop.getProducts(page, show.value, sort.value);
+    }
+
+    const searchBrand = computed(() => {
+        return shop.sidebar.brands.filter((brand) => {
+            return brand.name.toLowerCase().match(searchByBrand.value.toLowerCase());
+        });
+    });
+    
+    const searchCategory = computed(() => {
+        return shop.sidebar.categories.filter((category) => {
+            return category.name.toLowerCase().match(searchByCategory.value.toLowerCase());
+        });
+    });
     // For Quick View Modal ****************************************************
     let myModal;
     const selectedProduct =ref({
@@ -45,8 +65,28 @@
         }
     }
 
+    const toggle = (event) => {
+    const element = $(event.currentTarget).parent('li');
+
+    if (element.hasClass('open')) {
+        // If the submenu is open, close it
+        element.removeClass('open');
+        element.find('li').removeClass('open');
+        element.find('ul').slideUp();
+    } else {
+        // If the submenu is closed, open it
+        element.addClass('open');
+        element.children('ul').slideDown();
+        element.siblings('li').children('ul').slideUp();
+        element.siblings('li').removeClass('open');
+        element.siblings('li').find('li').removeClass('open');
+        element.siblings('li').find('ul').slideUp();
+    }
+};
+
     onMounted(() => {
-        Product.getProductsData();
+        shop.getSidebarData();
+        getProducts();
         myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))
     })
 </script>
@@ -80,22 +120,29 @@
                                     </ul>
                                     <!-- shop-item-filter-list end -->
                                 </div>
-                                <div class="toolbar-amount">
-                                    <span>Showing 1 to 9 of 15</span>
+                                <div class="toolbar-amount" v-if="products.data">
+                                    <span>Showing {{ products.meta.from }}-{{ products.meta.to > products.meta.total ? products.meta.total : products.meta.to }} of {{ products.meta.total }} item(s)</span>
                                 </div>
                             </div>
                             <!-- product-select-box start -->
-                            <div class="product-select-box">
+                            <div class="product-select-box d-flex">
+                                <div class="product-short me-2">
+                                    <p>Show :</p>
+                                    <select class="nice-select" style="width: 100px;" v-model="show" @change="getProducts">
+                                        <option value="20">20</option>
+                                        <option value="48">48</option>
+                                        <option value="80">80</option>
+                                        <option value="120">120</option>
+                                    </select>
+                                </div>  
                                 <div class="product-short">
                                     <p>Sort By:</p>
-                                    <select class="nice-select">
-                                        <option value="trending">Relevance</option>
-                                        <option value="sales">Name (A - Z)</option>
-                                        <option value="sales">Name (Z - A)</option>
-                                        <option value="rating">Price (Low &gt; High)</option>
-                                        <option value="date">Rating (Lowest)</option>
-                                        <option value="price-asc">Model (A - Z)</option>
-                                        <option value="price-asc">Model (Z - A)</option>
+                                    <select class="nice-select" style="width: 200px;" v-model="sort" @change="getProducts">
+                                        <option value="default">Default</option>
+                                        <option value="new">New</option>
+                                        <option value="feature">Featured</option>
+                                        <option value="winter">Winter</option>
+                                        <option value="popular">Popular</option>
                                     </select>
                                 </div>
                             </div>
@@ -108,8 +155,15 @@
                                 <div id="grid-view" class="tab-pane fade show" :class="gridProducts" role="tabpanel">
                                     <div class="product-area shop-product-area">
                                         <div class="row">
-                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40" v-for="(product, index) in products" :key="index">
-                                                <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                            <div class="col-lg-3 col-md-3 col-sm-6 mt-40" v-for="(product, index) in products.data" :key="index">
+                                                <templete v-if="loader">
+                                                    <div class="row">
+                                                        <ProductSkeleton :dataAmount="1"/>
+                                                    </div>
+                                                </templete>
+                                                <template v-else>
+                                                    <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
@@ -117,11 +171,11 @@
                                 <div id="list-view" class="tab-pane fade product-list-view" :class="listProducts" role="tabpanel">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="row product-layout-list" v-for="(product, index) in products" :key="index">
+                                            <div class="row product-layout-list" v-for="(product, index) in products.data" :key="index">
                                                 <div class="col-lg-3 col-md-5 ">
                                                     <div class="product-image">
                                                         <router-link :to="{name: 'product-details', params: {slug: product.slug}}">
-                                                            <img :src="product.image" alt="Li's Product Image">
+                                                            <img :src="$filters.makeImgPath(product.thumbnail)" alt="Li's Product Image">
                                                         </router-link>
                                                         <span class="sticker">New</span>
                                                     </div>
@@ -166,21 +220,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="paginatoin-area">
+                                <div class="paginatoin-area" v-if="products.data">
                                     <div class="row">
-                                        <div class="col-lg-6 col-md-6 pt-xs-15">
-                                            <p>Showing 1-12 of 13 item(s)</p>
+                                        <div class="col-lg-6 col-md-6 pt-xs-15 d-flex align-items-center">
+                                            <p>Showing {{ products.meta.from }}-{{ products.meta.to > products.meta.total ? products.meta.total : products.meta.to }} of {{ products.meta.total }} item(s)</p>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <ul class="pagination-box pt-xs-20 pb-xs-15">
-                                                <li><a href="#" class="Previous"><i class="fa fa-chevron-left"></i> Previous</a>
-                                                </li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li>
-                                                    <a href="#" class="Next"> Next <i class="fa fa-chevron-right"></i></a>
-                                                </li>
+                                                <Bootstrap5Pagination
+                                                    :data="products"
+                                                    @pagination-change-page="getProducts"
+                                                >
+                                                <template #prev-nav>
+                                                    <a class="Previous" href="#">Previous</a>
+                                                </template>
+                                                <template #next-nav>
+                                                    <a class="Next" href="#">Next</a>
+                                                </template>
+                                                </Bootstrap5Pagination>
                                             </ul>
                                         </div>
                                     </div>
@@ -191,119 +248,75 @@
                     </div>
                     <div class="col-lg-3 order-2 order-lg-1">
                         <!--sidebar-categores-box start  -->
-                        <div class="sidebar-categores-box mt-sm-30 mt-xs-30">
+                        <template v-if="loader">
+                            <SidebarSkalaton/>
+                        </template>
+                        <template v-else>
+                            <div class="sidebar-categores-box mt-sm-30 mt-xs-30">
+                                <div class="sidebar-title">
+                                    <h2>Categories</h2>
+                                </div>
+                                <!-- category-sub-menu start -->
+                                <div class="category-sub-menu" v-if="shop.sidebar.categories">
+                                    <input type="text" class="search-btn mt-2" style="border-radius: 10px;" placeholder="Search Cetegory" v-model="searchByCategory">
+                                    <ul>
+                                        <li class="has-sub" v-for="(category, index) in searchCategory" :key="index">
+                                            <a href="# " @click.prevent="toggle">{{ category.name }} ({{ category.products_count }})</a>
+                                            <ul>
+                                                <li><a href="#">All Videos</a></li>
+                                                <li><a href="#">Blouses</a></li>
+                                                <li><a href="#">Evening Dresses</a></li>
+                                                <li><a href="#">Summer Dresses</a></li>
+                                                <li><a href="#">T-Rent or Buy</a></li>
+                                                <li><a href="#">Your Watchlist</a></li>
+                                                <li><a href="#">Watch Anywhere</a></li>
+                                                <li><a href="#">Getting Started</a></li>  
+                                            </ul>
+                                        </li>
+                                        <li v-if="searchCategory.length == 0">
+                                            <img :src="$filters.makeImgPath('/nodata.png')" width="240" style="border-radius:20px" alt="">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </template>
+                        
+                        <div class="sidebar-categores-box" v-if="!loader">
                             <div class="sidebar-title">
-                                <h2>Categories</h2>
+                                <h2>Brand</h2>
                             </div>
-                            <!-- category-sub-menu start -->
-                            <div class="category-sub-menu">
-                                <ul>
-                                    <li class="has-sub"><a href="# ">Prime Video</a>
-                                        <ul>
-                                            <li><a href="#">All Videos</a></li>
-                                            <li><a href="#">Blouses</a></li>
-                                            <li><a href="#">Evening Dresses</a></li>
-                                            <li><a href="#">Summer Dresses</a></li>
-                                            <li><a href="#">T-Rent or Buy</a></li>
-                                            <li><a href="#">Your Watchlist</a></li>
-                                            <li><a href="#">Watch Anywhere</a></li>
-                                            <li><a href="#">Getting Started</a></li>  
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#">Computer</a>
-                                        <ul>
-                                            <li><a href="#">TV & Video</a></li>
-                                            <li><a href="#">Audio & Theater</a></li>
-                                            <li><a href="#">Camera, Photo</a></li>
-                                            <li><a href="#">Cell Phones</a></li>
-                                            <li><a href="#">Headphones</a></li>
-                                            <li><a href="#">Video Games</a></li>
-                                            <li><a href="#">Wireless Speakers</a></li> 
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#">Electronics</a>
-                                        <ul>
-                                            <li><a href="#">Amazon Home</a></li>
-                                            <li><a href="#">Kitchen & Dining</a></li>
-                                            <li><a href="#">Bed & Bath</a></li>
-                                            <li><a href="#">Appliances</a></li>    
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- category-sub-menu end -->
-                        </div>
-                        <!--sidebar-categores-box end  -->
-                        <!--sidebar-categores-box start  -->
-                        <div class="sidebar-categores-box">
-                            <div class="sidebar-title">
-                                <h2>Filter By</h2>
-                            </div>
-                            <!-- btn-clear-all start -->
-                            <button class="btn-clear-all mb-sm-30 mb-xs-30">Clear all</button>
-                            <!-- btn-clear-all end -->
-                            <!-- filter-sub-area start -->
                             <div class="filter-sub-area">
-                                <h5 class="filter-sub-titel">Brand</h5>
+                                <input type="text" class="search-btn mt-2" style="border-radius: 10px;" placeholder="Search Brand" v-model="searchByBrand">
                                 <div class="categori-checkbox">
                                     <form action="#">
-                                        <ul>
-                                            <li><input type="checkbox" name="product-categori"><a href="#">Prime Video (13)</a></li>
-                                            <li><input type="checkbox" name="product-categori"><a href="#">Computers (12)</a></li>
-                                            <li><input type="checkbox" name="product-categori"><a href="#">Electronics (11)</a></li>
-                                        </ul>
-                                    </form>
-                                </div>
-                                </div>
-                            <!-- filter-sub-area end -->
-                            <!-- filter-sub-area start -->
-                            <div class="filter-sub-area pt-sm-10 pt-xs-10">
-                                <h5 class="filter-sub-titel">Size</h5>
-                                <div class="size-checkbox">
-                                    <form action="#">
-                                        <ul>
-                                            <li><input type="checkbox" name="product-size"><a href="#">S (3)</a></li>
-                                            <li><input type="checkbox" name="product-size"><a href="#">M (3)</a></li>
-                                            <li><input type="checkbox" name="product-size"><a href="#">L (3)</a></li>
-                                            <li><input type="checkbox" name="product-size"><a href="#">XL (3)</a></li>
+                                        <ul v-if="shop.sidebar.brands">
+                                            <li v-for="(brand, index) in searchBrand" :key="index">
+                                                <input :id="`brand${index}`" type="checkbox" name="product-category">
+                                                <label :for="`brand${index}`" class="text-light ms-2" style="cursor: pointer;">{{brand.name}} ({{ brand.products_count }})</label>
+                                            </li>
+                                            <li v-if="searchBrand.length == 0">
+                                                <img :src="$filters.makeImgPath('/nodata.png')" width="240" style="border-radius:20px" alt="">
+                                            </li>
                                         </ul>
                                     </form>
                                 </div>
                             </div>
-                            <!-- filter-sub-area end -->
-                            <!-- filter-sub-area start -->
-                            <div class="filter-sub-area pt-sm-10 pt-xs-10">
-                                <h5 class="filter-sub-titel">Color</h5>
-                                <div class="color-categoriy">
-                                    <form action="#">
-                                        <ul>
-                                            <li><span class="white"></span><a href="#">White (1)</a></li>
-                                            <li><span class="black"></span><a href="#">Black (1)</a></li>
-                                            <li><span class="Orange"></span><a href="#">Orange (3) </a></li>
-                                            <li><span class="Blue"></span><a href="#">Blue  (2) </a></li>
-                                        </ul>
-                                    </form>
+
+
+                            <div class="row">
+                                <h5 class="filter-sub-titel" style="font-size: 18px;color: #fff;">Filter By Price</h5>    
+                                <div class="col-md-12 mt-2" v-if="sidebar.price">
+                                    <input type="text" class="search-btn" style="border-radius: 10px;" :placeholder="`Min - ${$filters.currencySymbol(sidebar.price.min_price)}`">
+                                </div>
+                                <div class="col-md-12 mt-2" v-if="sidebar.price">
+                                    <input type="text" class="search-btn" style="border-radius: 10px;" :placeholder="`Min - ${$filters.currencySymbol(sidebar.price.max_price)}`">
                                 </div>
                             </div>
-                            <!-- filter-sub-area end -->
-                        </div>
-                        <!--sidebar-categores-box end  -->
-                        <!-- category-sub-menu start -->
-                        <div class="sidebar-categores-box mb-sm-0 mb-xs-0">
-                            <div class="sidebar-title">
-                                <h2>Categories</h2>
+                            <div class="row mt-2">
+                                <div class="col-md-12 m-auto"><button class="search-btn"><i class="fas fa-search"> Search</i></button></div>
                             </div>
-                            <div class="category-tags">
-                                <ul>
-                                    <li><a href="# ">Devita</a></li>
-                                    <li><a href="# ">Cameras</a></li>
-                                    <li><a href="# ">Sony</a></li>
-                                    <li><a href="# ">Computer</a></li>
-                                    <li><a href="# ">Big Sale</a></li>
-                                    <li><a href="# ">Accessories</a></li>
-                                </ul>
-                            </div>
-                            <!-- category-sub-menu end -->
+                            <!-- btn-clear-all end -->
+                            
                         </div>
                     </div>
                 </div>
@@ -322,5 +335,55 @@
     }
     .col-lg-3.col-md-3.col-sm-6.mt-40 .add-cart{
       width: 110px !important;
+    }
+    .search-btn{
+        padding: 10px 20px;
+        border: none;
+        width: 100%;
+        letter-spacing: 2px;
+        border-radius: 10px;
+    }
+    .search-btn:focus{
+        background-color: #fff;
+    }
+
+    .category-sub-menu ul {
+        max-height: 300px;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+        margin-top: 10px;
+    }
+
+    .category-sub-menu ul::-webkit-scrollbar {
+        width: 4px !important;
+    }
+
+    .category-sub-menu ul::-webkit-scrollbar-thumb {
+        background-color: #0a7485 !important;
+        border-radius: 4px;
+    }
+
+    .category-sub-menu ul::-webkit-scrollbar-track {
+        background-color: #60d8eb !important;
+    }
+    
+    .categori-checkbox ul {
+        max-height: 300px;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+        margin-top: 10px;
+    }
+
+    .categori-checkbox ul::-webkit-scrollbar {
+        width: 4px !important;
+    }
+
+    .categori-checkbox ul::-webkit-scrollbar-thumb {
+        background-color: #0a7485 !important;
+        border-radius: 4px;
+    }
+
+    .categori-checkbox ul::-webkit-scrollbar-track {
+        background-color: #60d8eb !important;
     }
 </style>

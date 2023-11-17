@@ -2256,7 +2256,7 @@ textarea:focus {
   position: relative;
 }
 .product_desc .product_desc_info .product_name {
-	color: #0363cd;
+	color: #17A2B8;
 	display: block;
 	font-size: 14px;
 	font-weight: 500;
@@ -2369,10 +2369,10 @@ textarea:focus {
 }
 .add-actions-link li:hover a, 
 .add-actions-link li.add-cart:hover a {
-	color: #ffe404;
+	color: rgb(255, 238, 0);
 }
 .add-actions-link li.add-cart > a {
-	color: #a4a4a4;
+	color: #fff;
 	font-size: 13px;
 	font-weight: 500;
 	text-transform: uppercase;
@@ -4739,7 +4739,7 @@ span.required {
 /* 6.11 Li's Shop Page
 /*----------------------------------------*/
 .sidebar-categores-box {
-	background: #f4f4f4;
+	background: #17A2B8;
 	border: 1px solid #e1e1e1;
 	border-radius: 3px;
 	box-shadow: none;
@@ -4750,9 +4750,9 @@ span.required {
 	border-bottom: 1px solid #e1e1e1;
 }
 .sidebar-title h2 {
-	color: #242424;
+	color: #fff;
 	display: block;
-	font-size: 14px;
+	font-size: 20px;
 	font-weight: 500;
 	line-height: 30px;
 	position: relative;
@@ -4792,26 +4792,36 @@ span.required {
 }
 .category-sub-menu ul li:hover a {
 	color: #17A2B8;
+	background-color: #fff;
+}
+.category-sub-menu ul li:hover ul li a {
+	background-color: transparent;
 }
 .category-sub-menu ul li:first-child {
 	padding-top: 16px;
 }
 .category-sub-menu li.has-sub > a {
-  color: #242424;
-  cursor: pointer;
-  display: block;
-  line-height: 20px;
-  position: relative;
+	color: #fff;
+	cursor: pointer;
+	display: block;
+	line-height: 20px;
+	font-size: 16px;
+	position: relative;
+	padding: 5px 10px;
+	border-radius: 5px;
 }
 .category-sub-menu li.has-sub li a {
 	border: 0 none;
 	display: block;
 	font-size: 14px;
-	padding: 0 10px;
-	color: #333;
+	padding: 3px 10px;
+	color: #fff;
 }
 .category-sub-menu li.has-sub li a:hover {
-	color: #117a8b;
+	color: #17A2B8;
+	padding: 3px 10px;
+	border-radius: 5px;
+	background-color: #fff;
 }
 .category-sub-menu li.has-sub > a::after {
 	color: #242424;
@@ -4820,9 +4830,14 @@ span.required {
 	font-size: 16px;
 	position: absolute;
 	right: 5px;
+	color: #fff;
+}
+.category-sub-menu li.has-sub > a:hover::after{
+	color: #000;
 }
 .category-sub-menu li.has-sub.open > a::after {
 	content: "\f068";
+	color: #000;
 }
 .sidebar-categores-box .filter-sub-area h5 {
   color: #2f333a;

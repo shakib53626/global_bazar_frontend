@@ -142,7 +142,7 @@
         position: absolute;
         width: 0%;
         height: 100%;
-        background-color: green;
+        background-color: rgb(197, 17, 11);
         top: 0;
         left: 0;
         border-radius: 3px;

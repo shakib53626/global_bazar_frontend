@@ -8,3 +8,4 @@ export { default as ProductSkeleton } from '@/components/skeleton/Product.vue';
 export { default as OfferBannerSkalaton } from '@/components/skeleton/OfferBanner.vue';
 export { default as SellersSkalaton } from '@/components/skeleton/Sellers.vue';
 export { default as SellerStoreSkalaton } from '@/components/skeleton/SellerStore.vue';
+export { default as SidebarSkalaton } from '@/components/skeleton/Sidebar.vue';
