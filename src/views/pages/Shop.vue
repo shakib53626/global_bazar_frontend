@@ -12,10 +12,22 @@
     const shop             = useShop();
     const searchByBrand    = ref("");
     const searchByCategory = ref("");
-    const {products, loader, sidebar} = storeToRefs(shop);
+    const selectedBrand    = ref([]);
+    const selectedCategory = ref([]);
+    const {products, loader, sidebar, sidebarLoader} = storeToRefs(shop);
 
     const getProducts = (page = 1) =>{
-        shop.getProducts(page, show.value, sort.value);
+        shop.getProducts(page, show.value, sort.value, selectedBrand.value, selectedCategory.value);
+    }
+
+    const clearCategory = () =>{
+        selectedCategory.value = [];
+        getProducts();
+    }
+    
+    const clearBrand = () =>{
+        selectedBrand.value = [];
+        getProducts();
     }
 
     // Brand and Category Search Code 
@@ -31,10 +43,7 @@
             return category.name.toLowerCase().match(searchByCategory.value.toLowerCase());
         });
     });
-
-    // Brand and category and Price By Filter
-
-    const selectedBrand = ref([]);
+    
 
     // For Quick View Modal ****************************************************
     let myModal;
@@ -256,7 +265,7 @@
                     </div>
                     <div class="col-lg-3 order-2 order-lg-1">
                         <!--sidebar-categores-box start  -->
-                        <template v-if="loader">
+                        <template v-if="sidebarLoader">
                             <SidebarSkalaton/>
                         </template>
                         <template v-else>
@@ -268,9 +277,11 @@
                                 <div class="category-sub-menu" v-if="shop.sidebar.categories">
                                     <input type="text" class="search-btn mt-2" style="border-radius: 10px;" placeholder="Search Cetegory" v-model="searchByCategory">
                                     <ul>
-                                        <li class="has-sub" v-for="(category, index) in searchCategory" :key="index">
-                                            <a href="# " @click.prevent="toggle">{{ category.name }} ({{ category.products_count }})</a>
-                                            <ul>
+                                        <li class="has-sub d-flex align-items-center" v-for="(category, index) in searchCategory" :key="index">
+                                            <!-- <a href="#" @click.prevent="toggle">{{ category.name }} ({{ category.products_count }})</a> -->
+                                            <input :id="`category${index}`" style="height: 15px;width: 15px;" type="checkbox" :value="category.id" v-model="selectedCategory" @change.prevent="getProducts">
+                                            <label :for="`category${index}`" class="text-light ms-2 mb-0" style="cursor: pointer;">{{category.name}} ({{ category.products_count }})</label>
+                                            <!-- <ul>
                                                 <li><a href="#">All Videos</a></li>
                                                 <li><a href="#">Blouses</a></li>
                                                 <li><a href="#">Evening Dresses</a></li>
@@ -279,17 +290,18 @@
                                                 <li><a href="#">Your Watchlist</a></li>
                                                 <li><a href="#">Watch Anywhere</a></li>
                                                 <li><a href="#">Getting Started</a></li>  
-                                            </ul>
+                                            </ul> -->
                                         </li>
                                         <li v-if="searchCategory.length == 0">
                                             <img :src="$filters.makeImgPath('/nodata.png')" width="230" style="border-radius:20px" alt="">
                                         </li>
                                     </ul>
+                                    <button class="search-btn mt-4 text-dark" @click.prevent="clearCategory"><i class="fas fa-trash"></i> Clear Filter</button>
                                 </div>
                             </div>
                         </template>
                         
-                        <div class="sidebar-categores-box" v-if="!loader">
+                        <div class="sidebar-categores-box" v-if="!sidebarLoader">
                             <div class="sidebar-title">
                                 <h2>Brand</h2>
                             </div>
@@ -299,7 +311,7 @@
                                     <form action="#">
                                         <ul v-if="shop.sidebar.brands">
                                             <li v-for="(brand, index) in searchBrand" :key="index">
-                                                <input :id="`brand${index}`" type="checkbox" name="product-category" v-model="selectedBrand">
+                                                <input :id="`brand${index}`" type="checkbox" :value="brand.id" v-model="selectedBrand" @change.prevent="getProducts">
                                                 <label :for="`brand${index}`" class="text-light ms-2" style="cursor: pointer;">{{brand.name}} ({{ brand.products_count }})</label>
                                             </li>
                                             <li v-if="searchBrand.length == 0">
@@ -307,12 +319,13 @@
                                             </li>
                                         </ul>
                                     </form>
+                                    <button class="search-btn mt-4 text-dark" @click.prevent="clearBrand"><i class="fas fa-trash"></i> Clear Filter</button>
                                 </div>
                             </div>
 
 
                             <div class="row">
-                                <h5 class="filter-sub-titel" style="font-size: 18px;color: #fff;">Filter By Price</h5>    
+                                <h5 class="filter-sub-titel mt-4" style="font-size: 18px;color: #fff;">Filter By Price</h5>    
                                 <div class="col-md-12 mt-2" v-if="sidebar.price">
                                     <input type="text" class="search-btn" style="border-radius: 10px;" :placeholder="`Min - ${$filters.currencySymbol(sidebar.price.min_price)}`">
                                 </div>
@@ -345,7 +358,7 @@
       width: 110px !important;
     }
     .search-btn{
-        padding: 10px 20px;
+        padding: 5px 20px;
         border: none;
         width: 100%;
         letter-spacing: 2px;
@@ -354,7 +367,9 @@
     .search-btn:focus{
         background-color: #fff;
     }
-
+    .sidebar-categores-box input{
+        height: 30px;
+    }
     .category-sub-menu ul {
         max-height: 300px;
         overflow-y: scroll;

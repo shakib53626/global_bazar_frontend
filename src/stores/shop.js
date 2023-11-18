@@ -3,20 +3,23 @@ import { defineStore } from "pinia";
 
 export const useShop = defineStore('shop',{
     state:()=>({
-        products: [],
-        sidebar : [],
-        loader  : false,
+        products     : [],
+        sidebar      : [],
+        loader       : false,
+        sidebarLoader: false,
     }),
 
     actions:{
-        async getProducts(page, show, sort){
+        async getProducts(page, show, sort, brand, category){
             this.loader = true;
             try {
                 const res = await axios.get('/shop-products', {
                     params:{
-                        page: page,
-                        show: show,
-                        sort: sort, 
+                        page    : page,
+                        show    : show,
+                        sort    : sort,
+                        brand   : brand,
+                        category: category,
                     }
                 });
                 if(res.status === 200){
@@ -30,7 +33,7 @@ export const useShop = defineStore('shop',{
         },
         
         async getSidebarData(){
-            this.loader = true;
+            this.sidebarLoader = true;
             try {
                 const res = await axios.get('/shop-sidebar');
                 if(res.status === 200){
@@ -39,7 +42,7 @@ export const useShop = defineStore('shop',{
             } catch (error) {
                 console.log(error);
             }finally{
-                this.loader = false;
+                this.sidebarLoader = false;
             }
         }
     }
