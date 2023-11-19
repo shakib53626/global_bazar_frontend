@@ -15,8 +15,7 @@
                     <div class="ssc-square mb"></div>
                     <div class="flex align-center justify-between">
                         <div class="w-40">
-                            <div class="ssc-line w-70 mbs"></div>
-                            <div class="ssc-line w-100 mbs"></div>
+                            <div class="ssc-line w-100 mbs" style="margin-top: 14px;"></div>
                         </div>
                         <div class="ssc-head-line w-50"></div>
                     </div>

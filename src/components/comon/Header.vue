@@ -14,7 +14,6 @@
     const {cartItems, cartItemsCount, totalPrice}   = storeToRefs(cart);
     const {user, logoutLoading} = storeToRefs(auth);
     const {themesInfo, currency, language} = storeToRefs(themeInfo);
-
     // theme Information code Here ******************************
 
     const cartBox = () =>{
@@ -194,19 +193,20 @@
                                         <li class="megamenu-holder"><router-link :to="{name: 'shop'}">Categories</router-link>
                                             <ul class="megamenu hb-megamenu">
                                                 <li v-for="(category, index) in categories" :key="index" class="menu-category-area">
-                                                    <a href="shop-left-sidebar.html">{{ category.name }}</a>
+                                                    <router-link :to="{name: 'shop', query:{ products: category.slug } }">{{ category.name }}</router-link>
 
                                                     <span class="toggle_icon" @click="toggleSubCategory(index)">
                                                         <i class="fas" :class="{'fa-plus': !toggleIcon[index], 'fa-minus': toggleIcon[index]}"></i>
                                                     </span>
                                                     <ul v-if="toggleIcon[index]">
-                                                        <li><a href="shop-3-column.html">Shop 3 Column</a></li>
-                                                        <li><a href="shop-4-column.html">Shop 4 Column</a></li>
-                                                        <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
-                                                        <li><a href="shop-right-sidebar.html">Shop Right Sidebar</a></li>
-                                                        <li><a href="shop-list.html">Shop List</a></li>
-                                                        <li><a href="shop-list-left-sidebar.html">Shop List Left Sidebar</a></li>
-                                                        <li><a href="shop-list-right-sidebar.html">Shop List Right Sidebar</a></li>
+                                                        <template v-if="category.sub_categories.length>0">
+                                                            <li v-for="(sub_category, index) in category.sub_categories" :key="index">
+                                                                <router-link :to="{name: 'shop', query: { products: sub_category.slug } }">{{ sub_category.name }}</router-link>
+                                                            </li>
+                                                        </template>
+                                                        <template v-else>
+                                                            <li><el-empty description="No Sub-Category Found"/></li>
+                                                        </template>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -297,5 +297,11 @@
         top: 6px;
         right: 15px;
         cursor: pointer;
+    }
+    .megamenu .el-empty{
+        padding-top: 0;
+    }
+    .megamenu .el-empty__description p{
+        font-size: 14px;
     }
 </style>

@@ -4,12 +4,14 @@
     import {QuickViewModal, Products, ProductSkeleton, SidebarSkalaton} from '@/components';
     import {useShop} from '@/stores'
     import { storeToRefs } from 'pinia';
+    import { useRoute } from 'vue-router';
 
 
     // Products show code here *********************************************************************
     const all              = ref('all');
     const sort             = ref('default');
     const show             = ref(48);
+    const route            = useRoute();
     const shop             = useShop();
     const searchByBrand    = ref("");
     const searchByCategory = ref("");
@@ -33,11 +35,12 @@
         getProducts();
     }
 
-    watch(() => [...searchQuery.value], (newValue, oldValue) => {
-        if(newValue.length >= 3 || oldValue.length >= 3){
-            getProducts();
+    const queryProducts = () =>{
+        selectedCategory.value = [];
+        if(route.query.products){
+            selectedCategory.value.push(route.query.products);
         }
-    })
+    }
 
     // Brand and Category Search Code 
 
@@ -52,8 +55,20 @@
             return category.name.toLowerCase().match(searchByCategory.value.toLowerCase());
         });
     });
-    
 
+    // product search for type code here
+    watch(() => [...searchQuery.value], (newValue, oldValue) => {
+        if (newValue.length >= 3 || oldValue.length >= 3) {
+            getProducts();
+        }
+    })
+
+    // Menu bar category product show *************
+    watch(() => route.query.products, (newValue, oldValue) => {
+        queryProducts();
+        getProducts();
+    })
+    
     // For Quick View Modal ****************************************************
     let myModal;
     const selectedProduct =ref({
@@ -90,26 +105,8 @@
         }
     }
 
-    const toggle = (event) => {
-    const element = $(event.currentTarget).parent('li');
-
-        if (element.hasClass('open')) {
-            // If the submenu is open, close it
-            element.removeClass('open');
-            element.find('li').removeClass('open');
-            element.find('ul').slideUp();
-        } else {
-            // If the submenu is closed, open it
-            element.addClass('open');
-            element.children('ul').slideDown();
-            element.siblings('li').children('ul').slideUp();
-            element.siblings('li').removeClass('open');
-            element.siblings('li').find('li').removeClass('open');
-            element.siblings('li').find('ul').slideUp();
-        }
-    };
-
     onMounted(() => {
+        queryProducts();
         shop.getSidebarData();
         getProducts();
         myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))
@@ -192,7 +189,7 @@
                                         <div class="row" v-if="products.data">
                                             <div class="col-lg-3 col-md-3 col-sm-6 mt-40" v-for="(product, index) in products.data" :key="index">
                                                 <templete v-if="loader">
-                                                    <div class="row">
+                                                    <div class="row" style="margin-top: -20px;">
                                                         <ProductSkeleton :dataAmount="1"/>
                                                     </div>
                                                 </templete>
@@ -317,7 +314,7 @@
                                     <ul>
                                         <li class="has-sub d-flex align-items-center" v-for="(category, index) in searchCategory" :key="index">
                                             <!-- <a href="#" @click.prevent="toggle">{{ category.name }} ({{ category.products_count }})</a> -->
-                                            <input :id="`category${index}`" style="height: 15px;width: 15px;" type="checkbox" :value="category.id" v-model="selectedCategory" @change.prevent="getProducts">
+                                            <input :id="`category${index}`" style="height: 15px;width: 15px;" type="checkbox" :value="category.slug" v-model="selectedCategory" @change.prevent="getProducts">
                                             <label :for="`category${index}`" class="text-light ms-2 mb-0" style="cursor: pointer;">{{category.name}} ({{ category.products_count }})</label>
                                             <!-- <ul>
                                                 <li><a href="#">All Videos</a></li>
@@ -331,7 +328,7 @@
                                             </ul> -->
                                         </li>
                                         <li v-if="searchCategory.length == 0">
-                                            <el-empty description="No Product Found"/>
+                                            <el-empty description="No Category Found"/>
                                         </li>
                                     </ul>
                                     <button class="search-btn mt-4 text-dark" @click.prevent="clearCategory"><i class="fas fa-trash"></i> Clear Filter</button>
@@ -349,11 +346,11 @@
                                     <form action="#">
                                         <ul v-if="shop.sidebar.brands">
                                             <li v-for="(brand, index) in searchBrand" :key="index">
-                                                <input :id="`brand${index}`" type="checkbox" :value="brand.id" v-model="selectedBrand" @change.prevent="getProducts">
+                                                <input :id="`brand${index}`" type="checkbox" :value="brand.slug" v-model="selectedBrand" @change.prevent="getProducts">
                                                 <label :for="`brand${index}`" class="text-light ms-2" style="cursor: pointer;">{{brand.name}} ({{ brand.products_count }})</label>
                                             </li>
                                             <li v-if="searchBrand.length == 0">
-                                                <el-empty description="No Product Found"/>
+                                                <el-empty description="No Brand Found"/>
                                             </li>
                                         </ul>
                                     </form>

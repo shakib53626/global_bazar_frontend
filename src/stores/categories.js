@@ -1,15 +1,15 @@
-import axios from "axios";
+import axiosInstance from '@/service/axiosService';
 import { defineStore } from "pinia";
 
 export const useCategories = defineStore('categories',{
     state:()=>({
-        categories : [],    
+        categories   : [],
     }),
 
     actions:{
         async getCaegories(){
             try {
-                const res = await axios.get('/categories');
+                const res = await axiosInstance.get('/categories');
                 if(res.status === 200){
                     this.categories = res.data.data
                 }
