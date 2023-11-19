@@ -10,7 +10,7 @@ export const useShop = defineStore('shop',{
     }),
 
     actions:{
-        async getProducts(page, show, sort, brand, category){
+        async getProducts(page, show, sort, brand, category, price){
             this.loader = true;
             try {
                 const res = await axios.get('/shop-products', {
@@ -20,6 +20,7 @@ export const useShop = defineStore('shop',{
                         sort    : sort,
                         brand   : brand,
                         category: category,
+                        price   : price,
                     }
                 });
                 if(res.status === 200){

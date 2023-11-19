@@ -12,12 +12,13 @@
     const shop             = useShop();
     const searchByBrand    = ref("");
     const searchByCategory = ref("");
+    const price_range      = ref("");
     const selectedBrand    = ref([]);
     const selectedCategory = ref([]);
     const {products, loader, sidebar, sidebarLoader} = storeToRefs(shop);
 
     const getProducts = (page = 1) =>{
-        shop.getProducts(page, show.value, sort.value, selectedBrand.value, selectedCategory.value);
+        shop.getProducts(page, show.value, sort.value, selectedBrand.value, selectedCategory.value, price_range.value);
     }
 
     const clearCategory = () =>{
@@ -29,6 +30,8 @@
         selectedBrand.value = [];
         getProducts();
     }
+
+
 
     // Brand and Category Search Code 
 
@@ -324,17 +327,17 @@
                             </div>
 
 
-                            <div class="row">
-                                <h5 class="filter-sub-titel mt-4" style="font-size: 18px;color: #fff;">Filter By Price</h5>    
-                                <div class="col-md-12 mt-2" v-if="sidebar.price">
-                                    <input type="text" class="search-btn" style="border-radius: 10px;" :placeholder="`Min - ${$filters.currencySymbol(sidebar.price.min_price)}`">
+                            <div class="row" v-if="sidebar.price">
+                                <h5 class="filter-sub-titel mt-4" style="font-size: 18px;color: #fff;">Filter By Price</h5>   
+                                
+                                <el-slider v-model="price_range" range :min="sidebar.price.min_price" :max="sidebar.price.max_price" @change="getProducts" />
+
+                                <div class="col-md-6 mt-2" v-if="sidebar.price">
+                                    <input type="text" class="search-btn price-btn" disabled :placeholder="`Min-${price_range[0]==null ? $filters.currencySymbol(sidebar.price.min_price) : $filters.currencySymbol(price_range[0])}`">
                                 </div>
-                                <div class="col-md-12 mt-2" v-if="sidebar.price">
-                                    <input type="text" class="search-btn" style="border-radius: 10px;" :placeholder="`Min - ${$filters.currencySymbol(sidebar.price.max_price)}`">
+                                <div class="col-md-6 mt-2" v-if="sidebar.price">
+                                    <input type="text" class="search-btn price-btn" disabled :placeholder="`Max-${price_range[1]==null ? $filters.currencySymbol(sidebar.price.max_price) : $filters.currencySymbol(price_range[1])}`">
                                 </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-12 m-auto"><button class="search-btn"><i class="fas fa-search"> Search</i></button></div>
                             </div>
                             <!-- btn-clear-all end -->
                             
@@ -363,6 +366,10 @@
         width: 100%;
         letter-spacing: 2px;
         border-radius: 10px;
+    }
+    .price-btn{
+        padding: 5px 10px;
+        letter-spacing: 0.5px;
     }
     .search-btn:focus{
         background-color: #fff;
@@ -408,5 +415,9 @@
 
     .categori-checkbox ul::-webkit-scrollbar-track {
         background-color: #60d8eb !important;
+    }
+    .el-slider {
+        --el-slider-main-bg-color: #dfff00 !important;
+        --el-slider-runway-bg-color: white !important;
     }
 </style>
