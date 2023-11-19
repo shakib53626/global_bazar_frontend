@@ -1159,7 +1159,7 @@ textarea:focus {
 .cart-quantity .add-to-cart {
 	border: none;
 	font-size: 14px;
-	color: #242424;
+	color: #fff;
 	position: relative;
 	background: #17A2B8;
 	cursor: pointer;
@@ -1170,7 +1170,7 @@ textarea:focus {
 	transition: all 0.3s ease-in-out;
 }
 .cart-quantity .add-to-cart:hover {
-  background: #242424;
+  background: #f39c11;
   color: #ffffff;
 }
 .cart-plus-minus {

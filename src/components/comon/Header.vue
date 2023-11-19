@@ -130,7 +130,7 @@
                                 <ul class="hm-menu">
                                     <li class="hm-wishlist" v-if="user.data">
                                         <router-link :to="{name:'wishlist'}">
-                                            <span class="cart-item-count wishlist-item-count">{{ user.meta.wishlists.length }}</span>
+                                            <span class="cart-item-count wishlist-item-count" v-if="user.meta.wishlists">{{ user.meta.wishlists.length }}</span>
                                             <i class="fa fa-heart-o"></i>
                                         </router-link>
                                     </li>

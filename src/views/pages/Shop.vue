@@ -397,6 +397,9 @@
     .search-btn:focus{
         background-color: #fff;
     }
+    .search-product{
+        height: 45px !important;
+    }
     .sidebar-categores-box input{
         height: 30px;
     }

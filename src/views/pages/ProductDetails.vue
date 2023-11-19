@@ -1,7 +1,10 @@
 <script setup>
-    import {ref, onMounted} from 'vue'
-
-    //Swiper ja Code Here ************************************************************************
+    import {ref, onMounted, watch} from 'vue'
+    import { useRoute } from 'vue-router';
+    import { useProducts, useNotification, useCart, useWishlist, useAuth } from '@/stores'
+    import { storeToRefs } from 'pinia';
+   
+   //Swiper ja Code Here ************************************************************************
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import 'swiper/css';
     import 'swiper/css/navigation';
@@ -9,44 +12,83 @@
     import { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from 'swiper/modules';
     const modules = ref([Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
 
+    // Backend data received and some design issue code start here*****************
+    const quantity    = ref(1);
+    const price       = ref();
+    const route       = useRoute();
+    const cart        = useCart();
+    const wishlist    = useWishlist();
+    const auth        = useAuth();
+    const productData = useProducts();
+    const notification= useNotification();
+    const {productDetailsData} = storeToRefs(productData);
 
+    const getSingleProductData = () =>{
+        const slug = route.params.slug;
+        productData.getSingleProductData(slug);
+    }
+
+    const thumbnail   = ref(productData.productDetailsData.thumbnail); 
+
+    watch(() => productDetailsData.value, (newProductDetailsData) => {
+        thumbnail.value = newProductDetailsData.thumbnail;
+    });
+
+    // Quantity increment and decrement code here 
+    const qtyPlus = () =>{
+        quantity.value += 1;
+    }
+    
+    const qtyMinus = () =>{
+        if(quantity.value != 1){
+            quantity.value -= 1;
+        }
+    }
+
+    const productThumbnail = (image) =>{
+        thumbnail.value = image;
+    }
+
+    // Add to cart code here 
+
+    const addToCart = (product) =>{
+        if(product.discount){
+            price.value = product.price - (product.discount/100)*product.price;
+        }else{
+            price.value = product.price
+        }
+        cart.addToCart({
+            id           : product.id,
+            name         : product.name,
+            quantity     : quantity.value,
+            price        : price.value.toFixed(),
+            discount     : product.discount,
+            regular_price: product.price,
+            thumbnail    : product.thumbnail,
+            slug         : product.slug
+        });
+
+        notification.Success(`${product.name} Added Your Cart`);
+    }
+
+    // Add to wishlist code here 
+    const addToWishlist = async(product) =>{
+        if(auth.user.data){
+            let res = await wishlist.addToWishlist(product);
+            if(res){
+                if(res.status==201){
+                    notification.Success(`${product.name} Added Your Wishlist`);
+                }else{
+                    notification.Success(`${product.name} Remove For Your Wishlist`);
+                }
+            }
+        }else{
+            $("#LoginMOdal").modal("show");
+        }
+    }
 
     onMounted(() => {
-        // this code for product gallery image carousel************
-      $('.product-details-images').each(function(){
-            var $this = $(this);
-            var $thumb = $this.siblings('.product-details-thumbs, .tab-style-left');
-            $this.slick({
-                arrows: false,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                autoplay: false,
-                autoplaySpeed: 5000,
-                dots: false,
-                infinite: true,
-                centerMode: false,
-                centerPadding: 0,
-                asNavFor: $thumb,
-            });
-        });
-        $('.product-details-thumbs').each(function(){
-            var $this = $(this);
-            var $details = $this.siblings('.product-details-images');
-            $this.slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                autoplay: false,
-                autoplaySpeed: 5000,
-                dots: false,
-                infinite: true,
-                focusOnSelect: true,
-                centerMode: true,
-                centerPadding: 0,
-                prevArrow: '<span class="slick-prev"><i class="fa fa-angle-left"></i></span>',
-                nextArrow: '<span class="slick-next"><i class="fa fa-angle-right"></i></span>',
-                asNavFor: $details,
-            });
-        });    
+        getSingleProductData();
     })
 </script>
 <template>
@@ -58,6 +100,7 @@
                     <ul>
                         <li><router-link :to="{name: 'home'}">Home</router-link></li>
                         <li class="active">Product Details</li>
+                        {{ productDetailsData }}
                     </ul>
                 </div>
             </div>
@@ -72,43 +115,28 @@
                         <div class="product-details-left">
                             <div class="product-details-images slider-navigation-1">
                                 <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/1.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/1.jpg" alt="product image">
-                                    </a>
-                                </div>
-                                <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/2.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/2.jpg" alt="product image">
-                                    </a>
-                                </div>
-                                <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/3.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/3.jpg" alt="product image">
-                                    </a>
-                                </div>
-                                <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/4.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/4.jpg" alt="product image">
-                                    </a>
-                                </div>
-                                <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/5.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/5.jpg" alt="product image">
-                                    </a>
-                                </div>
-                                <div class="lg-image">
-                                    <a class="popup-img venobox vbox-item" href="@/assets/images/product/large-size/6.jpg" data-gall="myGallery">
-                                        <img src="@/assets/images/product/large-size/6.jpg" alt="product image">
+                                    <a class="popup-img venobox vbox-item" :href="$filters.makeImgPath(thumbnail)" data-gall="myGallery">
+                                        <img :src="$filters.makeImgPath(thumbnail)" alt="product image">
                                     </a>
                                 </div>
                             </div>
-                            <div class="product-details-thumbs slider-thumbs-1">                                        
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/1.jpg" alt="product image thumb"></div>
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/2.jpg" alt="product image thumb"></div>
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/3.jpg" alt="product image thumb"></div>
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/4.jpg" alt="product image thumb"></div>
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/5.jpg" alt="product image thumb"></div>
-                                <div class="sm-image"><img src="@/assets/images/product/small-size/6.jpg" alt="product image thumb"></div>
+                            <div class="product-details-thumbs slider-thumbs-1">
+                                <swiper
+                                    :slidesPerView="4"
+                                    :loop=true
+                                    :autoplay="{
+                                        delay: 5000,
+                                    }"
+                                    :modules="modules"
+                                    class="mySwiper"
+                                >
+                                    <swiper-slide>
+                                        <div class="sm-image"><img :src="$filters.makeImgPath(productDetailsData.thumbnail)" alt="product image thumb" @click="productThumbnail(productDetailsData.thumbnail)"></div>
+                                    </swiper-slide>
+                                    <swiper-slide v-for="(image, index) in productDetailsData.images" :key="index">
+                                        <div class="sm-image"><img :src="$filters.makeImgPath(image)" alt="product image thumb" @click="productThumbnail(image)"></div>
+                                    </swiper-slide>
+                                </swiper>
                             </div>
                         </div>
                         <!--// Product Details Left -->
@@ -117,8 +145,8 @@
                     <div class="col-lg-7 col-md-6">
                         <div class="product-details-view-content pt-60">
                             <div class="product-info">
-                                <h2>Today is a good day Framed poster</h2>
-                                <span class="product-details-ref">Reference: demo_15</span>
+                                <h2>{{ productDetailsData.name }}</h2>
+                                <span class="product-details-ref">Category : {{ productDetailsData.category_id }}</span>
                                 <div class="rating-box pt-20">
                                     <ul class="rating rating-with-review-item">
                                         <li><i class="fa fa-star-o"></i></li>
@@ -131,7 +159,8 @@
                                     </ul>
                                 </div>
                                 <div class="price-box pt-20">
-                                    <span class="new-price new-price-2">$57.98</span>
+                                    <span class="new-price new-price-2 offer-price"> {{ $filters.currencySymbol(productDetailsData.price - (productDetailsData.discount/100)*productDetailsData.price) }}</span>
+                                    <span class="old-price ms-3" v-if="productDetailsData.price"><del>{{ $filters.currencySymbol(productDetailsData.price) }}</del></span>
                                 </div>
                                 <div class="product-desc">
                                     <p>
@@ -139,7 +168,7 @@
                                         </span>
                                     </p>
                                 </div>
-                                <div class="product-variants">
+                                <!-- <div class="product-variants">
                                     <div class="produt-variants-size">
                                         <label>Dimension</label>
                                         <select class="nice-select">
@@ -148,59 +177,32 @@
                                             <option value="3" title="L">80x120cm</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="single-add-to-cart">
                                     <form action="#" class="cart-quantity">
                                         <div class="quantity">
                                             <label>Quantity</label>
                                             <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="1" type="text">
-                                                <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                <input class="cart-plus-minus-box" v-model="quantity" type="text">
+                                                <div class="dec qtybutton" @click="qtyMinus"><i class="fa fa-angle-down"></i></div>
+                                                <div class="inc qtybutton" @click="qtyPlus"><i class="fa fa-angle-up"></i></div>
                                             </div>
                                         </div>
-                                        <button class="add-to-cart" type="submit">Add to cart</button>
+                                        <button class="add-to-cart" type="submit" @click.prevent="addToCart(productDetailsData)">Add to cart</button>
                                         <button class="add-to-cart ms-2" type="submit">Buy Now</button>
                                     </form>
                                 </div>
                                 <div class="product-additional-info pt-25">
-                                    <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a>
+                                    <a class="wishlist-btn" href="" @click.prevent="addToWishlist(productDetailsData)"><i class="fa fa-heart-o"></i>Add to wishlist</a>
                                     <div class="product-social-sharing pt-25">
                                         <ul>
                                             <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
                                             <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
                                             <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a></li>
                                             <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
+                                            <li class="instagram"><a href="https://wa.me/+8801580663349?text=Hello%20from%20my%20website" target="_blank"><i class="fa fa-instagram"></i>WhatsApp</a></li>
                                         </ul>
                                     </div>
-                                </div>
-                                <div class="block-reassurance">
-                                    <ul>
-                                        <li>
-                                            <div class="reassurance-item">
-                                                <div class="reassurance-icon">
-                                                    <i class="fa fa-check-square-o"></i>
-                                                </div>
-                                                <p>Security policy (edit with Customer reassurance module)</p>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="reassurance-item">
-                                                <div class="reassurance-icon">
-                                                    <i class="fa fa-truck"></i>
-                                                </div>
-                                                <p>Delivery policy (edit with Customer reassurance module)</p>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="reassurance-item">
-                                                <div class="reassurance-icon">
-                                                    <i class="fa fa-exchange"></i>
-                                                </div>
-                                                <p> Return policy (edit with Customer reassurance module)</p>
-                                            </div>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -639,6 +641,8 @@
         <!-- Li's Laptop Product Area End Here -->
     </div>
 </template>
-<style lang="">
-    
+<style>
+    .offer-price{
+        color: #17A2B8 !important;
+    }
 </style>

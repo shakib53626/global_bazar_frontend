@@ -30,7 +30,6 @@ export const useWishlist = defineStore('wishlist',{
                     }else{
                         const auth = useAuth();
                         let index = auth.user.meta.wishlists.findIndex((i) => i.id === product.id);
-                        console.log(index);
                         auth.user.meta.wishlists.splice(index, 1);
                     }
                     return new Promise((resolve) => {

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from "@/service/axiosService";
 import { defineStore } from 'pinia'
 
 export const useProducts = defineStore('products', {
@@ -8,6 +8,7 @@ export const useProducts = defineStore('products', {
         popular:[],
         feature:[],
         productLoading:false,
+        productDetailsData: {},
     }),
     getters: {
 
@@ -16,7 +17,7 @@ export const useProducts = defineStore('products', {
         async getProductsData(type=''){
             this.productLoading = true;
             try {
-                const res = await axios.get(`/products?conditions=${type}`);
+                const res = await axiosInstance.get(`/products?conditions=${type}`);
                 
                 if(res.status==200){
                     if (type==='sale') {
@@ -33,6 +34,19 @@ export const useProducts = defineStore('products', {
                 console.log(error);
             }finally{
                 this.productLoading = false;
+            }
+        },
+        
+        async getSingleProductData(slug){
+            try {
+                const res = await axiosInstance.get(`/single-product/${slug}`);
+                
+                if(res.status==200){
+                    this.productDetailsData = res.data.data
+                }
+            } catch (error) {
+                console.log(error);
+            }finally{
             }
         }
     },
