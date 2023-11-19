@@ -4,11 +4,22 @@
 <template>
     <div>
         <div class="sidebar-categores-box mt-sm-30 mt-xs-30">
+            <div class="ssc-head-line w-100 mt-2" style="height:30px;border-radius:10px;margin-bottom:30px;"></div>
             <div class="sidebar-title">
+                <div class="ssc-head-line w-50 mb-2"></div>
+                <div class="ssc-line w-90 mbs mb-3" style="height:20px;"></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ssc-head-line w-100 mb-4"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ssc-head-line w-100 mb-4"></div>
+                    </div>
+                </div>
                 <div class="ssc-head-line w-50 mb-4"></div>
             </div>
             <div>
-                <div class="ssc-head-line w-100 mt-2" style="height:45px;border-radius:10px;margin-bottom:30px;"></div>
+                <div class="ssc-head-line w-100 mt-2" style="height:30px;border-radius:10px;margin-bottom:30px;"></div>
                 <ul>
                     <li class="has-sub">
                         <ul>

@@ -10,17 +10,19 @@ export const useShop = defineStore('shop',{
     }),
 
     actions:{
-        async getProducts(page, show, sort, brand, category, price){
+        async getProducts(page, show, conditions, brand, category, price, search, sort){
             this.loader = true;
             try {
                 const res = await axios.get('/shop-products', {
                     params:{
-                        page    : page,
-                        show    : show,
-                        sort    : sort,
-                        brand   : brand,
-                        category: category,
-                        price   : price,
+                        page      : page,
+                        show      : show,
+                        conditions: conditions,
+                        brand     : brand,
+                        category  : category,
+                        price     : price,
+                        search    : search.length>=3 ? search: "",
+                        sort      : sort,
                     }
                 });
                 if(res.status === 200){

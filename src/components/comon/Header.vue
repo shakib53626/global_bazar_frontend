@@ -27,6 +27,12 @@
         $('.ht-setting-trigger').toggleClass('is-active');
     }
 
+    const toggleIcon = ref(Array(categories.length).fill(false));
+
+    const toggleSubCategory = (index) => {
+        toggleIcon.value[index] = !toggleIcon.value[index];
+    }
+
     // User Logout Code Here **************************************
 
     const userLogout = async() =>{
@@ -187,9 +193,13 @@
                                         <li class="dropdown-holder"><router-link :to="{name: 'shop'}">Shop</router-link></li>
                                         <li class="megamenu-holder"><router-link :to="{name: 'shop'}">Categories</router-link>
                                             <ul class="megamenu hb-megamenu">
-                                                <li v-for="(category, index) in categories" :key="index">
+                                                <li v-for="(category, index) in categories" :key="index" class="menu-category-area">
                                                     <a href="shop-left-sidebar.html">{{ category.name }}</a>
-                                                    <!-- <ul>
+
+                                                    <span class="toggle_icon" @click="toggleSubCategory(index)">
+                                                        <i class="fas" :class="{'fa-plus': !toggleIcon[index], 'fa-minus': toggleIcon[index]}"></i>
+                                                    </span>
+                                                    <ul v-if="toggleIcon[index]">
                                                         <li><a href="shop-3-column.html">Shop 3 Column</a></li>
                                                         <li><a href="shop-4-column.html">Shop 4 Column</a></li>
                                                         <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
@@ -197,7 +207,7 @@
                                                         <li><a href="shop-list.html">Shop List</a></li>
                                                         <li><a href="shop-list-left-sidebar.html">Shop List Left Sidebar</a></li>
                                                         <li><a href="shop-list-right-sidebar.html">Shop List Right Sidebar</a></li>
-                                                    </ul> -->
+                                                    </ul>
                                                 </li>
                                             </ul>
                                         </li>
@@ -278,5 +288,14 @@
         width: 230px;
         top: -28px;
         left: 0;
+    }
+    .menu-category-area{
+        position: relative;
+    }
+    .toggle_icon{
+        position: absolute;
+        top: 6px;
+        right: 15px;
+        cursor: pointer;
     }
 </style>

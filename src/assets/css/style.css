@@ -1840,9 +1840,6 @@ textarea:focus {
 	min-width: 250px;
 	border-right: 1px solid #ebebeb;
 }
-.megamenu > li:first-child {
-	padding-left: 5px;
-}
 .megamenu > li:last-child, .megamenu-static-holder .hb-megamenu > li:last-child {
 	border-right: none;
 }
