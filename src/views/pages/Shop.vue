@@ -114,7 +114,6 @@
 </script>
 <template>
     <div>
-        <!-- Begin Li's Breadcrumb Area -->
         <div class="breadcrumb-area">
             <div class="container">
                 <div class="breadcrumb-content">
@@ -125,28 +124,23 @@
                 </div>
             </div>
         </div>
-        <!-- Li's Breadcrumb Area End Here -->
-        <!-- Begin Li's Content Wraper Area -->
+
         <div class="content-wraper pt-60 pb-60 pt-sm-30">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 order-1 order-lg-2">
-                        <!-- shop-top-bar start -->
                         <div class="shop-top-bar">
                             <div class="shop-bar-inner">
                                 <div class="product-view-mode">
-                                    <!-- shop-item-filter-list start -->
                                     <ul class="nav shop-item-filter-list" role="tablist">
                                         <li class="active" role="presentation"><a @click.prevent="showTabItem('grid')"><i class="fa fa-th"></i></a></li>
                                         <li role="presentation"><a @click.prevent="showTabItem('list')"><i class="fa fa-th-list"></i></a></li>
                                     </ul>
-                                    <!-- shop-item-filter-list end -->
                                 </div>
                                 <!-- <div class="toolbar-amount" v-if="products.data">
                                     <span>Showing {{ products.meta.from }}-{{ products.meta.to > products.meta.total ? products.meta.total : products.meta.to }} of {{ products.meta.total }} item(s)</span>
                                 </div> -->
                             </div>
-                            <!-- product-select-box start -->
                             <div class="product-select-box d-flex">
                                 <div class="product-short me-2">
                                     <p>Show :</p>
@@ -178,10 +172,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- product-select-box end -->
                         </div>
-                        <!-- shop-top-bar end -->
-                        <!-- shop-products-wrapper start -->
                         <div class="shop-products-wrapper">
                             <div class="tab-content">
                                 <div id="grid-view" class="tab-pane fade show" :class="gridProducts" role="tabpanel">
@@ -212,7 +203,7 @@
                                                         <router-link :to="{name: 'product-details', params: {slug: product.slug}}">
                                                             <img :src="$filters.makeImgPath(product.thumbnail)" alt="Li's Product Image">
                                                         </router-link>
-                                                        <span class="sticker">New</span>
+                                                        <span class="sticker">{{ product.conditions }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-5 col-md-7">
@@ -220,7 +211,7 @@
                                                         <div class="product_desc_info">
                                                             <div class="product-review">
                                                                 <h5 class="manufacturer">
-                                                                    <router-link :to="{name: 'product-details', params: {slug:product.slug}}">Graphic Corner</router-link>
+                                                                    <router-link :to="{name: 'shop', query: { products: product.slug } }">Graphic Corner</router-link>
                                                                 </h5>
                                                                 <div class="rating-box">
                                                                     <ul class="rating">
@@ -234,18 +225,22 @@
                                                             </div>
                                                             <h4><router-link class="product_name" :to="{name: 'product-details', params: {slug:product.slug}}">{{product.name}}</router-link></h4>
                                                             <div class="price-box">
-                                                                <span class="new-price new-price-2">$ {{ product.offer_price }}</span>
-                                                                <span class="old-price">$ {{ product.regular_price }}</span>
+                                                                <span class="new-price new-price-2">{{ $filters.currencySymbol(product.price - (product.discount/100)*product.price) }}</span>
+                                                                <span class="old-price">{{ $filters.currencySymbol(product.price) }}</span>
                                                                 <span class="discount-percentage">- {{ product.discount }}%</span>
                                                             </div>
-                                                            <p>Beach Camera Exclusive Bundle - Includes Two Samsung Radiant 360 R3 Wi-Fi Bluetooth Speakers. Fill The Entire Room With Exquisite Sound via Ring Radiator Technology. Stream And Control R3 Speakers Wirelessly With Your Smartphone. Sophisticated, Modern Desig</p>
+                                                            <p>{{$filters.makeDescription(product.description, 150)}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <div class="shop-add-action mb-xs-30">
                                                         <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Add to cart</a></li>
+                                                            <li class="add-cart">
+                                                                <a href="#"  @click.prevent="addToCart(product)">
+                                                                    <i class="fas fa-spinner fa-spin" v-if="loading==product.id"></i> Add to Cart
+                                                                </a>
+                                                            </li>
                                                             <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>
                                                             <li><a class="quick-view" @click="showQuickViewModal" href="#"><i class="fa fa-eye"></i>Quick view</a></li>
                                                         </ul>
@@ -280,11 +275,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- shop-products-wrapper end -->
                     </div>
                     <div class="col-lg-3 order-2 order-lg-1">
-
-                        <!--sidebar-categores-box start  -->
                         <template v-if="sidebarLoader">
                             <SidebarSkalaton/>
                         </template>
@@ -308,24 +300,12 @@
                                 <div class="sidebar-title">
                                     <h2>Categories</h2>
                                 </div>
-                                <!-- category-sub-menu start -->
                                 <div class="category-sub-menu" v-if="shop.sidebar.categories">
                                     <input type="text" class="search-btn mt-2" style="border-radius: 10px;" placeholder="Search Cetegory" v-model="searchByCategory">
                                     <ul>
                                         <li class="has-sub d-flex align-items-center" v-for="(category, index) in searchCategory" :key="index">
-                                            <!-- <a href="#" @click.prevent="toggle">{{ category.name }} ({{ category.products_count }})</a> -->
                                             <input :id="`category${index}`" style="height: 15px;width: 15px;" type="checkbox" :value="category.slug" v-model="selectedCategory" @change.prevent="getProducts">
                                             <label :for="`category${index}`" class="text-light ms-2 mb-0" style="cursor: pointer;">{{category.name}} ({{ category.products_count }})</label>
-                                            <!-- <ul>
-                                                <li><a href="#">All Videos</a></li>
-                                                <li><a href="#">Blouses</a></li>
-                                                <li><a href="#">Evening Dresses</a></li>
-                                                <li><a href="#">Summer Dresses</a></li>
-                                                <li><a href="#">T-Rent or Buy</a></li>
-                                                <li><a href="#">Your Watchlist</a></li>
-                                                <li><a href="#">Watch Anywhere</a></li>
-                                                <li><a href="#">Getting Started</a></li>  
-                                            </ul> -->
                                         </li>
                                         <li v-if="searchCategory.length == 0">
                                             <el-empty description="No Category Found"/>
@@ -454,7 +434,7 @@
         background-color: #60d8eb !important;
     }
     .el-slider {
-        --el-slider-main-bg-color: #dfff00 !important;
+        --el-slider-main-bg-color: #FFDE59 !important;
         --el-slider-runway-bg-color: white !important;
     }
 </style>

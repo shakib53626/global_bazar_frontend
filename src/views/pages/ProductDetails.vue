@@ -100,7 +100,6 @@
                     <ul>
                         <li><router-link :to="{name: 'home'}">Home</router-link></li>
                         <li class="active">Product Details</li>
-                        {{ productDetailsData }}
                     </ul>
                 </div>
             </div>
@@ -147,7 +146,7 @@
                             <div class="product-info">
                                 <h2>{{ productDetailsData.name }}</h2>
                                 <span class="product-details-ref">Category : {{ productDetailsData.category_id }}</span>
-                                <div class="rating-box pt-20">
+                                <!-- <div class="rating-box pt-20">
                                     <ul class="rating rating-with-review-item">
                                         <li><i class="fa fa-star-o"></i></li>
                                         <li><i class="fa fa-star-o"></i></li>
@@ -157,15 +156,14 @@
                                         <li class="review-item"><a href="#">Read Review</a></li>
                                         <li class="review-item"><a href="#">Write Review</a></li>
                                     </ul>
-                                </div>
+                                </div> -->
                                 <div class="price-box pt-20">
                                     <span class="new-price new-price-2 offer-price"> {{ $filters.currencySymbol(productDetailsData.price - (productDetailsData.discount/100)*productDetailsData.price) }}</span>
                                     <span class="old-price ms-3" v-if="productDetailsData.price"><del>{{ $filters.currencySymbol(productDetailsData.price) }}</del></span>
                                 </div>
                                 <div class="product-desc">
                                     <p>
-                                        <span>100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom. Lorem ipsum dolor sit amet, consectetur adipisicing elit. quibusdam corporis, earum facilis et nostrum dolorum accusamus similique eveniet quia pariatur.
-                                        </span>
+                                        <span>{{$filters.makeDescription(productDetailsData.description, 200)}}</span>
                                     </p>
                                 </div>
                                 <!-- <div class="product-variants">
@@ -188,7 +186,9 @@
                                                 <div class="inc qtybutton" @click="qtyPlus"><i class="fa fa-angle-up"></i></div>
                                             </div>
                                         </div>
-                                        <button class="add-to-cart" type="submit" @click.prevent="addToCart(productDetailsData)">Add to cart</button>
+                                        <button class="add-to-cart anim-cart" :class="{'animCart' : cart.loading === productDetailsData.id}" type="submit" @click.prevent="addToCart(productDetailsData)">
+                                            <span><i class="fa fa-spinner fa-spin" v-if="cart.loading === productDetailsData.id"></i> Add to cart</span>
+                                        </button>
                                         <button class="add-to-cart ms-2" type="submit">Buy Now</button>
                                     </form>
                                 </div>
@@ -200,7 +200,7 @@
                                             <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
                                             <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a></li>
                                             <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
-                                            <li class="instagram"><a href="https://wa.me/+8801580663349?text=Hello%20from%20my%20website" target="_blank"><i class="fa fa-instagram"></i>WhatsApp</a></li>
+                                            <li class="instagram" v-if="productDetailsData.price"><a :href="`https://wa.me/+8801580663349?text=https://rodelacrafts.com/single-product/9%20Price = ${$filters.currencySymbol(productDetailsData.price)}%20 product Name = ${productDetailsData.name}%20website`" target="_blank"><i class="fa fa-instagram"></i>WhatsApp</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -219,8 +219,8 @@
                         <div class="li-product-tab">
                             <ul class="nav li-product-menu">
                                 <li><a class="active" data-toggle="tab" href="#description"><span>Description</span></a></li>
-                                <li><a data-toggle="tab" href="#product-details"><span>Product Details</span></a></li>
-                                <li><a data-toggle="tab" href="#reviews"><span>Reviews</span></a></li>
+                                <!-- <li><a data-toggle="tab" href="#product-details"><span>Product Details</span></a></li>
+                                <li><a data-toggle="tab" href="#reviews"><span>Reviews</span></a></li> -->
                             </ul>               
                         </div>
                         <!-- Begin Li's Tab Menu Content Area -->
@@ -229,7 +229,7 @@
                 <div class="tab-content">
                     <div id="description" class="tab-pane active show" role="tabpanel">
                         <div class="product-description">
-                            <span>The best is yet to come! Give your walls a voice with a framed poster. This aesthethic, optimistic poster will look great in your desk or in an open-space office. Painted wooden frame with passe-partout for more depth.</span>
+                            <span>{{productDetailsData.description}}</span>
                         </div>
                     </div>
                     <div id="product-details" class="tab-pane" role="tabpanel">
@@ -644,5 +644,9 @@
 <style>
     .offer-price{
         color: #17A2B8 !important;
+    }
+    .single-add-to-cart .add-to-cart span{
+        position: relative;
+        z-index: 999999;
     }
 </style>

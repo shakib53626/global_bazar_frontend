@@ -27,6 +27,14 @@ app.config.globalProperties.$filters={
 
     makeImgPath(image){
         return   "http://127.0.0.1:8000/" + image;
+    },
+
+    makeDescription(text, size){
+        if(!text) return '';
+        if(text.length <= size){
+            return text;
+        }
+        return text.substr(0, size) + '......';
     }
 }
 
