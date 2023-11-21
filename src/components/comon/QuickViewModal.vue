@@ -1,5 +1,12 @@
 <script setup>
-    import {ref, onMounted,defineProps } from 'vue'
+    import { useNotification, useCart} from '@/stores';
+    import {ref, onMounted,defineProps, watch } from 'vue'
+    import { Swiper, SwiperSlide } from 'swiper/vue';
+    import 'swiper/css';
+    import 'swiper/css/navigation';
+    import 'swiper/css/pagination';
+    import { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from 'swiper/modules';
+    const modules = ref([Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
     
     const props = defineProps({
         selectedProduct:{
@@ -7,42 +14,56 @@
             required: true,
         },
     });
+    const thumbnail   = ref("");
+
+    const productThumbnail = (image) =>{
+        thumbnail.value = image;
+    }
+
+    watch(() => props.selectedProduct.thumbnail, (newThumbnail) => {
+        thumbnail.value = newThumbnail;
+    });
+
+    // Quantity increment and decrement code here 
+    const quantity = ref(1);
+    const qtyPlus = () =>{
+        quantity.value += 1;
+    }
+    
+    const qtyMinus = () =>{
+        if(quantity.value != 1){
+            quantity.value -= 1;
+        }
+    }
+
+    // Add to cart code here ....
+    const price        = ref();
+    const notification = useNotification();
+    const cart         = useCart();
+
+
+    const addToCart = (product) =>{
+        if(product.discount){
+            price.value = product.price - (product.discount/100)*product.price;
+        }else{
+            price.value = product.price
+        }
+        cart.addToCart({
+            id           : product.id,
+            name         : product.name,
+            quantity     : quantity.value,
+            price        : price.value.toFixed(),
+            discount     : product.discount,
+            regular_price: product.price,
+            thumbnail    : product.thumbnail,
+            slug         : product.slug
+        });
+
+        notification.Success(`${product.name} Added Your Cart`);
+    }
 
     onMounted(() => {
-       $('.product-details-images').each(function(){
-            var $this = $(this);
-            var $thumb = $this.siblings('.product-details-thumbs, .tab-style-left');
-            $this.slick({
-                arrows: false,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                autoplay: false,
-                autoplaySpeed: 5000,
-                dots: false,
-                infinite: true,
-                centerMode: false,
-                centerPadding: 0,
-                asNavFor: $thumb,
-            });
-        });
-        $('.product-details-thumbs').each(function(){
-            var $this = $(this);
-            var $details = $this.siblings('.product-details-images');
-            $this.slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                autoplay: false,
-                autoplaySpeed: 5000,
-                dots: false,
-                infinite: true,
-                focusOnSelect: true,
-                centerMode: true,
-                centerPadding: 0,
-                prevArrow: '<span class="slick-prev"><i class="fa fa-angle-left"></i></span>',
-                nextArrow: '<span class="slick-next"><i class="fa fa-angle-right"></i></span>',
-                asNavFor: $details,
-            });
-        });  
+        
     })
 </script>
 
@@ -59,12 +80,33 @@
                             <div class="col-lg-5 col-md-6 col-sm-6">
                                 <div class="product-details-left">
                                     <div class="product-details-images slider-navigation-1">
-                                        <div class="lg-image" v-for="(image, index) in selectedProduct.gallery_image" :key="index">
-                                            <img :src="image" alt="product image">
+                                        <div class="lg-image">
+                                            <a class="popup-img venobox vbox-item" :href="$filters.makeImgPath( thumbnail ==''? selectedProduct.thumbnail : thumbnail )" data-gall="myGallery">
+                                                <img :src="$filters.makeImgPath(thumbnail ==''? selectedProduct.thumbnail : thumbnail)" alt="product image">
+                                            </a>
                                         </div>
                                     </div>
-                                    <div class="product-details-thumbs slider-thumbs-1">                                        
-                                        <div class="sm-image" v-for="(image, index) in selectedProduct.gallery_image" :key="index"><img :src="image" alt="product image thumb"></div>
+                                    <div class="product-details-thumbs slider-thumbs-1">
+                                        <swiper
+                                            :slidesPerView="4"
+                                            :loop=true
+                                            :autoplay="{
+                                                delay: 5000,
+                                            }"
+                                            :modules="modules"
+                                            class="mySwiper"
+                                        >
+                                            <swiper-slide>
+                                                <div class="sm-image">
+                                                    <img :src="$filters.makeImgPath(selectedProduct.thumbnail)" alt="product image thumb" @click="productThumbnail(selectedProduct.thumbnail)">
+                                                </div>
+                                            </swiper-slide>
+                                            <swiper-slide v-for="(image, index) in selectedProduct.images" :key="index">
+                                                <div class="sm-image">
+                                                    <img :src="$filters.makeImgPath(image)" alt="product image thumb" @click="productThumbnail(image)">
+                                                </div>
+                                            </swiper-slide>
+                                        </swiper>
                                     </div>
                                 </div>
                             </div>
@@ -73,54 +115,33 @@
                                 <div class="product-details-view-content pt-60">
                                     <div class="product-info">
                                         <h2 v-if="selectedProduct">{{ selectedProduct.name }}</h2>
-                                        <span class="product-details-ref">Reference: demo_15</span>
-                                        <div class="rating-box pt-20">
-                                            <ul class="rating rating-with-review-item">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="review-item"><a href="#">Read Review</a></li>
-                                                <li class="review-item"><a href="#">Write Review</a></li>
-                                            </ul>
-                                        </div>
+                                        <span class="product-details-ref">Category : {{ selectedProduct.category_id }}</span>
                                         <div class="price-box pt-20">
-                                            <span class="new-price new-price-2" v-if="selectedProduct">$ {{ selectedProduct.offer_price==0?selectedProduct.regular_price:selectedProduct.offer_price }}</span>
-                                            <span class="old-price ms-2" v-if="selectedProduct"><span v-if="selectedProduct.offer_price!=0"><del>$ {{ selectedProduct.regular_price }}</del></span></span>
+                                            <span class="new-price new-price-2 offer-price"> {{ $filters.currencySymbol(selectedProduct.price - (selectedProduct.discount/100)*selectedProduct.price) }}</span>
+                                            <span class="old-price ms-3" v-if="selectedProduct.price"><del>{{ $filters.currencySymbol(selectedProduct.price) }}</del></span>
                                         </div>
                                         <div class="product-desc">
                                             <p>
-                                                <span>100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom. Lorem ipsum dolor sit amet, consectetur adipisicing elit. quibusdam corporis, earum facilis et nostrum dolorum accusamus similique eveniet quia pariatur.
-                                                </span>
+                                                <span>{{$filters.makeDescription(selectedProduct.description, 200)}}</span>
                                             </p>
-                                        </div>
-                                        <div class="product-variants">
-                                            <div class="produt-variants-size">
-                                                <label>Dimension</label>
-                                                <select class="nice-select">
-                                                    <option value="1" title="S" selected="selected">40x60cm</option>
-                                                    <option value="2" title="M">60x90cm</option>
-                                                    <option value="3" title="L">80x120cm</option>
-                                                </select>
-                                            </div>
                                         </div>
                                         <div class="single-add-to-cart">
                                             <form action="#" class="cart-quantity">
                                                 <div class="quantity">
                                                     <label>Quantity</label>
                                                     <div class="cart-plus-minus">
-                                                        <input class="cart-plus-minus-box" value="1" type="text">
-                                                        <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
-                                                        <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                        <input class="cart-plus-minus-box" v-model="quantity" type="text">
+                                                        <div class="dec qtybutton" @click="qtyMinus"><i class="fa fa-angle-down"></i></div>
+                                                        <div class="inc qtybutton" @click="qtyPlus"><i class="fa fa-angle-up"></i></div>
                                                     </div>
                                                 </div>
-                                                <button class="add-to-cart" type="submit">Add to cart</button>
+                                                <button class="add-to-cart anim-cart" :class="{'animCart' : cart.loading === selectedProduct.id}" type="submit" @click.prevent="addToCart(selectedProduct)">
+                                                    <span><i class="fa fa-spinner fa-spin" v-if="cart.loading === selectedProduct.id"></i> Add to cart</span>
+                                                </button>
                                                 <button class="add-to-cart mt-2" type="submit">Buy Now</button>
                                             </form>
                                         </div>
                                         <div class="product-additional-info pt-25">
-                                            <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a>
                                             <div class="product-social-sharing pt-25">
                                                 <ul>
                                                     <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>

@@ -49,25 +49,10 @@ const showTabItem = (type) =>{
 
 // Quick view Modal Code Here **************************************************************
 let myModal;
-const selectedProduct =ref({
-    id:1,
-    name:'Accusantium dolorem1',
-    image:'./src/assets/images/product/large-size/1.jpg',
-    gallery_image: [
-        './src/assets/images/product/large-size/1.jpg',
-        './src/assets/images/product/large-size/2.jpg',
-        './src/assets/images/product/large-size/3.jpg',
-        './src/assets/images/product/large-size/4.jpg',
-        './src/assets/images/product/large-size/5.jpg',
-        './src/assets/images/product/large-size/6.jpg',
-    ],
-    regular_price: 46.00,
-    offer_price: 0,
-    discount:0,
-});
+const selectedProduct =ref({});
 const showQuickViewModal = (product) =>{
-    myModal.show();
     selectedProduct.value = product;
+    myModal.show();
 }
 
 

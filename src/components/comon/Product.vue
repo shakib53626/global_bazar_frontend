@@ -115,7 +115,7 @@
                                 <i class="fa fa-heart-o" v-else></i>
                             </a>
                         </li>
-                        <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal"><i class="fa fa-eye"></i></a></li>
+                        <li><a title="quick view" class="quick-view-btn" @click="showQuickViewModal(product)"><i class="fa fa-eye"></i></a></li>
                     </ul>
                 </div>
             </div>
