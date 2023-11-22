@@ -64,7 +64,7 @@ onMounted(()=>{
                 <div class="row">
                     <div class="col-12">
                         <form action="#">
-                            <div class="table-content table-responsive">
+                            <div class="table-content table-responsive" v-if="user.meta">
                                 <table class="table">
                                     <thead>
                                         <tr>

@@ -1,4 +1,54 @@
 <script setup>
+    import {computed, onMounted, ref} from 'vue';
+    import { useAuth, useNotification, useAddress, useCart } from '@/stores'
+    import { Form, Field } from 'vee-validate';
+    import * as yup from 'yup';
+    import { useRouter } from 'vue-router';
+    import { storeToRefs } from 'pinia';
+
+    
+    const showPassword   = ref(false);
+    const divisionId     = ref('');
+    const districtId     = ref('');
+    const deliveryCharge = ref(0);
+    const auth           = useAuth();
+    const cart           = useCart();
+    const address        = useAddress();
+    const router         = useRouter();
+    const notification   = useNotification();
+    const {user}         = storeToRefs(auth);
+    const {cartItems}    = storeToRefs(cart);
+    const {divisions, districts, districtLoader}  = storeToRefs(address);
+
+    const name = computed(() => auth.user.data ? auth.user.data.name : '');
+    const phone = computed(() => auth.user.data ? auth.user.data.phone : '');
+    const email = computed(() => auth.user.data ? auth.user.data.email : '');
+    
+    const schema = yup.object({
+        phone: yup.string().required("Phone Number field is required").min(11),
+        password: yup.string().required(),
+    });
+
+    const toggleShow = () =>{
+        showPassword.value = !showPassword.value
+    }
+
+    const getDistrict = (divisionId) =>{
+        address.getDistrict(divisionId);
+        const division = divisions.value.find(division => division.id === divisionId);
+        deliveryCharge.value = division.charge;
+    }
+
+    const login = async(values, {setErrors}) =>{
+        let res = await auth.login(values);
+        if(res.data){
+            notification.Success("Login Success")
+        }else{
+            setErrors(res);
+        }
+    }
+
+
     const showLogin = () =>{
         $('#checkout-login').slideToggle(900);
     }
@@ -14,6 +64,10 @@
     const showDifferentAddress = () =>{
         $('#ship-box-info').slideToggle(1000);
     }
+
+    onMounted(() => {
+        address.getDivisions();
+    })
 </script>
 <template>
     <div>
@@ -25,6 +79,7 @@
                         <li><router-link :to="{name:'home'}">Home</router-link></li>
                         <li class="active">Checkout</li>
                     </ul>
+                    {{ userData }}
                 </div>
             </div>
         </div>
@@ -36,33 +91,62 @@
                     <div class="col-12">
                         <div class="coupon-accordion">
                             <!--Accordion Start-->
-                            <h3>Returning customer? <span id="showlogin" @click="showLogin">Click here to login</span></h3>
-                            <div id="checkout-login" class="coupon-content">
-                                <div class="coupon-info">
-                                    <p class="coupon-text">Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est sit amet ipsum luctus.</p>
-                                    <form action="#">
-                                        <p class="form-row-first">
-                                            <label>Username or email <span class="required">*</span></label>
-                                            <input type="text">
-                                        </p>
-                                        <p class="form-row-last">
-                                            <label>Password  <span class="required">*</span></label>
-                                            <input type="text">
-                                        </p>
-                                        <p class="form-row">
-                                            <input value="Login" type="submit">
-                                            <label>
-                                                <input type="checkbox">
-                                                    Remember me 
-                                            </label>
-                                        </p>
-                                        <p class="lost-password"><a href="#">Lost your password?</a></p>
-                                    </form>
+                            <template v-if="!user.data">
+                                <h3 style="margin-bottom:0px;">Returning customer? <span id="showlogin" @click="showLogin">Click here to login</span></h3>
+                                <div id="checkout-login" class="coupon-content">
+                                    <div class="coupon-info">
+                                        <p class="coupon-text">If you want to store you order and tracking order, so login first then order submit.</p>
+                                        <Form @submit="login" :validation-schema="schema" v-slot="{errors, isSubmitting}">
+                                            <div>
+                                                <div class="row">
+                                                  <div class="col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-12 mb-20">
+                                                            <label>Phone Number*</label>
+                                                            <Field
+                                                                name="phone"
+                                                                class="mb-0 form-control"
+                                                                type="text"
+                                                                placeholder="Enter Phone Number"
+                                                            />
+                                                            <span class="text-danger">{{errors.phone}}</span>
+                                                        </div>
+                                                        <div class="col-12 mb-20">
+                                                            <label>Password</label>
+                                                            <span style="position:relative;display:block;">
+                                                                <Field
+                                                                    name="password"
+                                                                    class="mb-0 form-control"
+                                                                    :type="showPassword?'text':'password'"
+                                                                    placeholder="Password"
+                                                                />
+                                                                <span class="text-danger">{{errors.password}}</span>
+                                                                <span @click="toggleShow">
+                                                                    <i :class="{
+                                                                        'fas fa-eye eye_icon': !showPassword,
+                                                                        'fas fa-eye-slash eye_icon': showPassword,
+                                                                    }"></i>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-12  text-left text-md-right">
+                                                            <a href="#"> Forgotten pasward?</a>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <button class="register-button mt-0" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading...</button>
+                                                            <button class="register-button mt-0" v-else>Login</button>
+                                                        </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </Form>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                             <!--Accordion End-->
                             <!--Accordion Start-->
-                            <h3>Have a coupon? <span id="showcoupon" @click="showCoupon">Click here to enter your code</span></h3>
+                            <h3 style="margin-top: 15px;">Have a coupon? <span id="showcoupon" @click="showCoupon">Click here to enter your code</span></h3>
                             <div id="checkout_coupon" class="coupon-checkout-content">
                                 <div class="coupon-info">
                                     <form action="#">
@@ -84,75 +168,46 @@
                                 <h3>Billing Details</h3>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="country-select clearfix">
-                                            <label>Country <span class="required">*</span></label>
-                                            <select class="nice-select wide">
-                                                <option data-display="Bangladesh">Bangladesh</option>
-                                                <option value="uk">London</option>
-                                                <option value="rou">Romania</option>
-                                                <option value="fr">French</option>
-                                                <option value="de">Germany</option>
-                                                <option value="aus">Australia</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
                                         <div class="checkout-form-list">
-                                            <label>First Name <span class="required">*</span></label>
-                                            <input placeholder="" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>Last Name <span class="required">*</span></label>
-                                            <input placeholder="" type="text">
+                                            <label>Full Name <span class="required">*</span></label>
+                                            <input placeholder="Enter full name" type="text" v-model="name">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
-                                            <label>Company Name</label>
-                                            <input placeholder="" type="text">
+                                            <label>Phone Number <span class="required">*</span></label>
+                                            <input type="text" v-model="phone" min="11">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Email Address (Optional)</label>
+                                            <input placeholder="" type="email" v-model="email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="country-select clearfix">
+                                            <label>Division <span class="required">*</span></label>
+                                            <select class="nice-select wide" v-model="divisionId" @change="getDistrict(divisionId)">
+                                                <option value="">Select Division</option>
+                                                <option :value="division.id" v-for="(division, index) in divisions" :key="index">{{ division.name }} - {{ division.bn_name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="country-select clearfix">
+                                            <label>District <span class="required">*</span></label>
+                                            <span class="nice-select wide" v-if="districtLoader"><i class="fa fa-spinner fa-spin"></i> Loading....</span>
+                                            <select class="nice-select wide" v-model="districtId" v-else @change="getDeliveryCharge(districtId)">
+                                                <option value="">Select District</option>
+                                                <option :value="district.id" v-for="(district, index) in districts" :key="index">{{ district.name }} - {{ district.bn_name }}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Address <span class="required">*</span></label>
                                             <input placeholder="Street address" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkout-form-list">
-                                            <input placeholder="Apartment, suite, unit etc. (optional)" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkout-form-list">
-                                            <label>Town / City <span class="required">*</span></label>
-                                            <input type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>State / County <span class="required">*</span></label>
-                                            <input placeholder="" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>Postcode / Zip <span class="required">*</span></label>
-                                            <input placeholder="" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>Email Address <span class="required">*</span></label>
-                                            <input placeholder="" type="email">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>Phone  <span class="required">*</span></label>
-                                            <input type="text">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -262,31 +317,41 @@
                         <div class="your-order">
                             <h3>Your order</h3>
                             <div class="your-order-table table-responsive">
-                                <table class="table">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th class="cart-product-name">Product</th>
-                                            <th class="cart-product-total">Total</th>
+                                            <th style="width:20%;">Image</th>
+                                            <th style="width:60%;" class="cart-product-name">Product</th>
+                                            <th style="width:20%;" class="cart-product-total">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="cart_item">
-                                            <td class="cart-product-name"> Vestibulum suscipit<strong class="product-quantity"> × 1</strong></td>
-                                            <td class="cart-product-total"><span class="amount">£165.00</span></td>  
-                                        </tr>
-                                        <tr class="cart_item">
-                                            <td class="cart-product-name"> Vestibulum suscipit<strong class="product-quantity"> × 1</strong></td>
-                                            <td class="cart-product-total"><span class="amount">£165.00</span></td>  
+                                        <tr class="cart_item" v-for="(item, index) in cartItems" :key="index">
+                                            <td><img :src="$filters.makeImgPath(item.thumbnail)" width="30" alt=""></td>
+                                            <td class="cart-product-name"> {{ item.name }}<strong class="product-quantity"> × {{ item.quantity }}</strong></td>
+                                            <td class="cart-product-total"><span class="amount">{{ $filters.currencySymbol(item.regular_price*item.quantity) }}</span></td>  
                                         </tr>
                                     </tbody>
                                     <tfoot>
                                         <tr class="cart-subtotal">
-                                            <th>Cart Subtotal</th>
-                                            <td><span class="amount">£215.00</span></td>
+                                            <th colspan="2">Cart Subtotal</th>
+                                            <td><span class="amount">{{ $filters.currencySymbol(cart.totalPrice) }}</span></td>
+                                        </tr>
+                                        <tr class="cart-subtotal">
+                                            <th colspan="2">Offer Discount</th>
+                                            <td><span class="amount">{{ $filters.currencySymbol(cart.totalPrice-cart.totalDiscountPrice) }}</span></td>
+                                        </tr>
+                                        <tr class="cart-subtotal">
+                                            <th colspan="2">Coupon Discount</th>
+                                            <td><span class="amount">{{ $filters.currencySymbol(0) }}</span></td>
+                                        </tr>
+                                        <tr class="cart-subtotal">
+                                            <th colspan="2">Delivery Charge</th>
+                                            <td><span class="amount">{{ $filters.currencySymbol(deliveryCharge) }}</span></td>
                                         </tr>
                                         <tr class="order-total">
-                                            <th>Order Total</th>
-                                            <td><strong><span class="amount">£215.00</span></strong></td>
+                                            <th colspan="2">Order Total</th>
+                                            <td><strong><span class="amount">{{ $filters.currencySymbol(cart.totalDiscountPrice+deliveryCharge) }}</span></strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>

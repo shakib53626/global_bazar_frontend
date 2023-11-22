@@ -31,7 +31,7 @@
     }
 
     onMounted(() =>{
-        auth.login();
+        // auth.login();
     });
 </script>
 <template>

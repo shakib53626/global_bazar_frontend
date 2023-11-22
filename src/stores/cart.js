@@ -10,6 +10,13 @@ export const useCart = defineStore('cart',{
         totalPrice: (state) =>{
             let total = 0;
             state.cartItems.map((el) =>{
+                total += el["regular_price"] * el["quantity"]
+            })
+            return total;
+        },
+        totalDiscountPrice: (state) =>{
+            let total = 0;
+            state.cartItems.map((el) =>{
                 total += el["price"] * el["quantity"]
             })
             return total;
