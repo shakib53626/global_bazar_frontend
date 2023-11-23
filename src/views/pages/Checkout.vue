@@ -60,13 +60,17 @@
         coupon.apply(couponCode.value);
     }
 
-    const placeOrder = () =>{
-        order.placeOrder({
+    const placeOrder = async(couponCode) =>{
+        let res = await order.placeOrder({
             division_id : divisionId.value,
-            coupon_code : couponCode.value,
+            coupon_code : couponCode,
             shipping_address: orderAddress.value,
             items : cart.cartItems,
         });
+        if(res.status === 201){
+            notification.Success("Order Success");
+            cart.$reset();
+        }
     }
 
 
@@ -424,7 +428,7 @@
                                         </div>
                                     </div>
                                     <div class="order-button-payment">
-                                        <button class="btn btn-info" style="width: 100%;" @click.prevent="placeOrder">Place Order</button>
+                                        <button class="btn btn-info" style="width: 100%;" @click.prevent="placeOrder(coupon.coupon.code?coupon.coupon.code:null)">Place Order</button>
                                     </div>
                                 </div>
                             </div>

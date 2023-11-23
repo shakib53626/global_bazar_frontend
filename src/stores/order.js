@@ -11,11 +11,17 @@ export const useOrder = defineStore('order',{
             try {
                 const res = await axiosInstance.post('/place-order', orderInfo);
                 console.log(res);
-                if(res.status === 200){
-                    this.categories = res.data.data
+                if(res.status === 201){
+                    return new Promise((resolve) => {
+                        resolve(res.data);
+                    });
                 }
             } catch (error) {
-                console.log(error);
+                if(error.response.data){
+                    return new Promise((reject) => {
+                        reject(error.response.data.errors);
+                    });
+                }
             }
         }
     }
