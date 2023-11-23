@@ -1,6 +1,6 @@
 <script setup>
     import {computed, onMounted, ref} from 'vue';
-    import { useAuth, useNotification, useAddress, useCart } from '@/stores'
+    import { useAuth, useNotification, useAddress, useCart, useCoupon, useOrder } from '@/stores'
     import { Form, Field } from 'vee-validate';
     import * as yup from 'yup';
     import { useRouter } from 'vue-router';
@@ -10,9 +10,15 @@
     const showPassword   = ref(false);
     const divisionId     = ref('');
     const districtId     = ref('');
+    const couponCode     = ref('');
+    const divisionName   = ref('');
+    const districtName   = ref('');
+    const orderAddress   = ref('')
     const deliveryCharge = ref(0);
     const auth           = useAuth();
     const cart           = useCart();
+    const order          = useOrder();
+    const coupon         = useCoupon();
     const address        = useAddress();
     const router         = useRouter();
     const notification   = useNotification();
@@ -36,6 +42,8 @@
     const getDistrict = (divisionId) =>{
         address.getDistrict(divisionId);
         const division = divisions.value.find(division => division.id === divisionId);
+        console.log(division.name);
+        divisionName.value = division.name
         deliveryCharge.value = division.charge;
     }
 
@@ -46,6 +54,19 @@
         }else{
             setErrors(res);
         }
+    }
+
+    const applyCoupon = () =>{
+        coupon.apply(couponCode.value);
+    }
+
+    const placeOrder = () =>{
+        order.placeOrder({
+            division_id : divisionId.value,
+            coupon_code : couponCode.value,
+            shipping_address: orderAddress.value,
+            items : cart.cartItems,
+        });
     }
 
 
@@ -149,9 +170,9 @@
                             <h3 style="margin-top: 15px;">Have a coupon? <span id="showcoupon" @click="showCoupon">Click here to enter your code</span></h3>
                             <div id="checkout_coupon" class="coupon-checkout-content">
                                 <div class="coupon-info">
-                                    <form action="#">
+                                    <form @submit.prevent="applyCoupon">
                                         <p class="checkout-coupon">
-                                            <input placeholder="Coupon code" type="text">
+                                            <input placeholder="Coupon code" type="text" v-model="couponCode">
                                             <input value="Apply Coupon" type="submit">
                                         </p>
                                     </form>
@@ -207,13 +228,13 @@
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Address <span class="required">*</span></label>
-                                            <input placeholder="Street address" type="text">
+                                            <input placeholder="Street address" type="text" v-model="orderAddress">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list create-acc">
                                             <input id="cbox" type="checkbox" @click="showCreateAccount">
-                                            <label>Create an account?</label>
+                                            <label for="cbox">Create an account?</label>
                                         </div>
                                         <div id="cbox-info" class="checkout-form-list create-account">
                                             <p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
@@ -343,7 +364,7 @@
                                         </tr>
                                         <tr class="cart-subtotal">
                                             <th colspan="2">Coupon Discount</th>
-                                            <td><span class="amount">{{ $filters.currencySymbol(0) }}</span></td>
+                                            <td><span class="amount">{{ $filters.currencySymbol(coupon.coupnDiscount) }}</span></td>
                                         </tr>
                                         <tr class="cart-subtotal">
                                             <th colspan="2">Delivery Charge</th>
@@ -351,7 +372,7 @@
                                         </tr>
                                         <tr class="order-total">
                                             <th colspan="2">Order Total</th>
-                                            <td><strong><span class="amount">{{ $filters.currencySymbol(cart.totalDiscountPrice+deliveryCharge) }}</span></strong></td>
+                                            <td><strong><span class="amount">{{ $filters.currencySymbol(cart.totalDiscountPrice+deliveryCharge-coupon.coupnDiscount) }}</span></strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -403,7 +424,7 @@
                                         </div>
                                     </div>
                                     <div class="order-button-payment">
-                                        <input value="Place order" type="submit">
+                                        <button class="btn btn-info" style="width: 100%;" @click.prevent="placeOrder">Place Order</button>
                                     </div>
                                 </div>
                             </div>
