@@ -15,6 +15,8 @@
     const divisionName   = ref('');
     const districtName   = ref('');
     const orderAddress   = ref('');
+    const password       = ref();
+    const isRegister     = ref(false);
     const errors         = ref();
     const deliveryCharge = ref(0);
     const auth           = useAuth();
@@ -76,8 +78,11 @@
             coupon_code     : couponCode,
             shipping_address: orderAddress.value,
             items           : cart.cartItems,
+            isRegister      : isRegister.value,
+            password        : password.value
         });
         if(res.data){
+            auth.user = res;
             notification.Success("Order Created Success");
             cart.$reset();
             $("#OrderSuccess").modal("show");
@@ -265,13 +270,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list create-acc">
-                                            <input id="cbox" type="checkbox" @click="showCreateAccount">
+                                            <input id="cbox" type="checkbox" @click="showCreateAccount" v-model="isRegister">
                                             <label for="cbox">Create an account?</label>
                                         </div>
                                         <div id="cbox-info" class="checkout-form-list create-account">
                                             <p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
                                             <label>Account password  <span class="required">*</span></label>
-                                            <input placeholder="password" type="password">
+                                            <input placeholder="password" type="password" v-model="password">
                                         </div>
                                     </div>
                                 </div>
