@@ -1,5 +1,6 @@
 <script setup>
     import {computed, onMounted, ref} from 'vue';
+    import {OrderSuccess} from '@/components'
     import { useAuth, useNotification, useAddress, useCart, useCoupon, useOrder } from '@/stores'
     import { Form, Field } from 'vee-validate';
     import * as yup from 'yup';
@@ -13,7 +14,8 @@
     const couponCode     = ref('');
     const divisionName   = ref('');
     const districtName   = ref('');
-    const orderAddress   = ref('')
+    const orderAddress   = ref('');
+    const errors         = ref();
     const deliveryCharge = ref(0);
     const auth           = useAuth();
     const cart           = useCart();
@@ -24,12 +26,14 @@
     const notification   = useNotification();
     const {user}         = storeToRefs(auth);
     const {cartItems}    = storeToRefs(cart);
+    const name           = ref(auth.user.data? auth.user.data.name :'');
+    const phone          = ref(auth.user.data? auth.user.data.phone :'');
+    const email          = ref(auth.user.data? auth.user.data.email :'');
     const {divisions, districts, districtLoader}  = storeToRefs(address);
 
-    const name = computed(() => auth.user.data ? auth.user.data.name : '');
-    const phone = computed(() => auth.user.data ? auth.user.data.phone : '');
-    const email = computed(() => auth.user.data ? auth.user.data.email : '');
     
+
+
     const schema = yup.object({
         phone: yup.string().required("Phone Number field is required").min(11),
         password: yup.string().required(),
@@ -42,7 +46,6 @@
     const getDistrict = (divisionId) =>{
         address.getDistrict(divisionId);
         const division = divisions.value.find(division => division.id === divisionId);
-        console.log(division.name);
         divisionName.value = division.name
         deliveryCharge.value = division.charge;
     }
@@ -50,6 +53,9 @@
     const login = async(values, {setErrors}) =>{
         let res = await auth.login(values);
         if(res.data){
+            name.value  = res.data.name;
+            phone.value = res.data.phone;
+            email.value = res.data.email;
             notification.Success("Login Success")
         }else{
             setErrors(res);
@@ -62,14 +68,21 @@
 
     const placeOrder = async(couponCode) =>{
         let res = await order.placeOrder({
-            division_id : divisionId.value,
-            coupon_code : couponCode,
+            customer_name   : name.value,
+            customer_phone  : phone.value,
+            email           : email.value,
+            division_id     : divisionId.value,
+            district_id     : districtId.value,
+            coupon_code     : couponCode,
             shipping_address: orderAddress.value,
-            items : cart.cartItems,
+            items           : cart.cartItems,
         });
-        if(res.status === 201){
-            notification.Success("Order Success");
+        if(res.data){
+            notification.Success("Order Created Success");
             cart.$reset();
+            $("#OrderSuccess").modal("show");
+        }else{
+            errors.value = res;
         }
     }
 
@@ -196,18 +209,24 @@
                                         <div class="checkout-form-list">
                                             <label>Full Name <span class="required">*</span></label>
                                             <input placeholder="Enter full name" type="text" v-model="name">
+                                            <span v-if="errors">
+                                                <span v-for="(error, index) in errors.customer_name" :key="index" class="text-danger">{{ error }}</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Phone Number <span class="required">*</span></label>
-                                            <input type="text" v-model="phone" min="11">
+                                            <input type="text" v-model="phone" min="11" placeholder="Enter Phone Number">
+                                            <span v-if="errors">
+                                                    <span v-for="(error, index) in errors.customer_phone" :key="index" class="text-danger">{{ error }}</span>
+                                                </span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Email Address (Optional)</label>
-                                            <input placeholder="" type="email" v-model="email">
+                                            <input placeholder="Enter Email" type="email" v-model="email">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -217,22 +236,31 @@
                                                 <option value="">Select Division</option>
                                                 <option :value="division.id" v-for="(division, index) in divisions" :key="index">{{ division.name }} - {{ division.bn_name }}</option>
                                             </select>
+                                            <span v-if="errors">
+                                                <span v-for="(error, index) in errors.division_id" :key="index" class="text-danger">{{ error }}</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="country-select clearfix">
                                             <label>District <span class="required">*</span></label>
                                             <span class="nice-select wide" v-if="districtLoader"><i class="fa fa-spinner fa-spin"></i> Loading....</span>
-                                            <select class="nice-select wide" v-model="districtId" v-else @change="getDeliveryCharge(districtId)">
+                                            <select class="nice-select wide" v-model="districtId" v-else >
                                                 <option value="">Select District</option>
                                                 <option :value="district.id" v-for="(district, index) in districts" :key="index">{{ district.name }} - {{ district.bn_name }}</option>
                                             </select>
+                                            <span v-if="errors">
+                                                <span v-for="(error, index) in errors.district_id" :key="index" class="text-danger">{{ error }}</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list">
                                             <label>Address <span class="required">*</span></label>
                                             <input placeholder="Street address" type="text" v-model="orderAddress">
+                                            <span v-if="errors">
+                                                <span v-for="(error, index) in errors.shipping_address" :key="index" class="text-danger">{{ error }}</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -247,87 +275,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="different-address">
-                                    <div class="ship-different-title">
-                                        <h3>
-                                            <label>Ship to a different address?</label>
-                                            <input id="ship-box" type="checkbox" @click="showDifferentAddress">
-                                        </h3>
-                                    </div>
-                                    <div id="ship-box-info" class="row">
-                                        <div class="col-md-12">
-                                            <div class="country-select clearfix">
-                                                <label>Country <span class="required">*</span></label>
-                                                <select class="nice-select wide">
-                                                    <option data-display="Bangladesh">Bangladesh</option>
-                                                    <option value="uk">London</option>
-                                                    <option value="rou">Romania</option>
-                                                    <option value="fr">French</option>
-                                                    <option value="de">Germany</option>
-                                                    <option value="aus">Australia</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>First Name <span class="required">*</span></label>
-                                                <input placeholder="" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Last Name <span class="required">*</span></label>
-                                                <input placeholder="" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Company Name</label>
-                                                <input placeholder="" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Address <span class="required">*</span></label>
-                                                <input placeholder="Street address" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <input placeholder="Apartment, suite, unit etc. (optional)" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Town / City <span class="required">*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>State / County <span class="required">*</span></label>
-                                                <input placeholder="" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Postcode / Zip <span class="required">*</span></label>
-                                                <input placeholder="" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Email Address <span class="required">*</span></label>
-                                                <input placeholder="" type="email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="checkout-form-list">
-                                                <label>Phone  <span class="required">*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="different-address"> 
                                     <div class="order-notes">
                                         <div class="checkout-form-list">
                                             <label>Order Notes</label>
@@ -428,7 +376,8 @@
                                         </div>
                                     </div>
                                     <div class="order-button-payment">
-                                        <button class="btn btn-info" style="width: 100%;" @click.prevent="placeOrder(coupon.coupon.code?coupon.coupon.code:null)">Place Order</button>
+                                        <button class="btn btn-info" style="width: 100%;" v-if="order.loading"><i class="fa fa-spinner fa-spin"></i> Loading....</button>
+                                        <button class="btn btn-info" style="width: 100%;" @click.prevent="placeOrder(coupon.coupon.code?coupon.coupon.code:null)" v-else>Place Order</button>
                                     </div>
                                 </div>
                             </div>
@@ -438,6 +387,7 @@
             </div>
         </div>
         <!--Checkout Area End-->
+        <OrderSuccess/>
     </div>
 </template>
 <style lang="">

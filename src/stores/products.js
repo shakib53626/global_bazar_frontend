@@ -3,11 +3,13 @@ import { defineStore } from 'pinia'
 
 export const useProducts = defineStore('products', {
     state: () => ({ 
-        products: [],
-        sale: [],
-        popular:[],
-        feature:[],
-        productLoading:false,
+        products          : [],
+        sale              : [],
+        popular           : [],
+        feature           : [],
+        winter            : [],
+        newProduct       : [],
+        productLoading    : false,
         productDetailsData: {},
     }),
     getters: {
@@ -21,11 +23,15 @@ export const useProducts = defineStore('products', {
                 
                 if(res.status==200){
                     if (type==='sale') {
-                        this.sale= res.data.data
+                        this.sale = res.data.data
                     }else if (type==='popular') {
-                        this.popular= res.data.data
+                        this.popular = res.data.data
                     }else if (type==='feature') {
-                        this.feature= res.data.data
+                        this.feature = res.data.data
+                    }else if (type==='winter'){
+                        this.winter = res.data.data
+                    }else if (type==='new'){
+                        this.newProduct = res.data.data
                     }else{
                         this.products= res.data.data
                     }

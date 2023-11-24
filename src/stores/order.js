@@ -3,14 +3,15 @@ import { defineStore } from "pinia";
 
 export const useOrder = defineStore('order',{
     state:()=>({
-        categories   : [],
+        categories: [],
+        loading   : false,
     }),
 
     actions:{
         async placeOrder(orderInfo){
+            this.loading = true;
             try {
                 const res = await axiosInstance.post('/place-order', orderInfo);
-                console.log(res);
                 if(res.status === 201){
                     return new Promise((resolve) => {
                         resolve(res.data);
@@ -22,6 +23,8 @@ export const useOrder = defineStore('order',{
                         reject(error.response.data.errors);
                     });
                 }
+            }finally{
+                this.loading = false;
             }
         }
     }

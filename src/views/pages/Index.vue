@@ -22,7 +22,7 @@ const {offersBanner} = storeToRefs(offerbanner);
 
 // Products show code here *********************************************************************
 const Product = useProducts();
-const {products, sale, popular, feature, productLoading} = storeToRefs(Product);
+const {products, newProduct, sale, popular, feature, winter, productLoading} = storeToRefs(Product);
 
 // Products Tab Code HEre *******************************************************************
 const newProducts     = ref('active');
@@ -63,6 +63,8 @@ onMounted(() => {
     Product.getProductsData('sale');
     Product.getProductsData('popular');
     Product.getProductsData('feature');
+    Product.getProductsData('winter');
+    Product.getProductsData('new');
     myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))
 })
 </script>
@@ -224,13 +226,8 @@ onMounted(() => {
                     <div class="col-lg-12">
                         <div class="li-section-title">
                             <h2>
-                                <span>Laptop</span>
+                                <span class="text-info">Winter Products</span>
                             </h2>
-                            <ul class="li-sub-category-list">
-                                <li class="active"><a href="shop-left-sidebar.html">Prime Video</a></li>
-                                <li><a href="shop-left-sidebar.html">Computers</a></li>
-                                <li><a href="shop-left-sidebar.html">Electronics</a></li>
-                            </ul>
                         </div>
                         <div class="product-active">
                             <templete v-if="productLoading">
@@ -246,7 +243,7 @@ onMounted(() => {
                                     :modules="modules"
                                     class="mySwiper"
                                 >
-                                    <swiper-slide v-for="(product, index) in sale" :key="index">
+                                    <swiper-slide v-for="(product, index) in winter" :key="index">
                                         <div class="col-lg-12">
                                             <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                         </div>
@@ -269,13 +266,8 @@ onMounted(() => {
                     <div class="col-lg-12">
                         <div class="li-section-title">
                             <h2>
-                                <span>TV & Audio</span>
+                                <span>New Products</span>
                             </h2>
-                            <ul class="li-sub-category-list">
-                                <li class="active"><a href="shop-left-sidebar.html">Chamcham</a></li>
-                                <li><a href="shop-left-sidebar.html">Sanai</a></li>
-                                <li><a href="shop-left-sidebar.html">Meito</a></li>
-                            </ul>
                         </div>
                         <div class="product-active">
                             <templete v-if="productLoading">
@@ -291,7 +283,7 @@ onMounted(() => {
                                     :modules="modules"
                                     class="mySwiper"
                                 >
-                                    <swiper-slide v-for="(product, index) in sale" :key="index">
+                                    <swiper-slide v-for="(product, index) in newProduct" :key="index">
                                         <div class="col-lg-12">
                                             <Products :product="product" :showQuickViewModal="() => showQuickViewModal(product)"/>
                                         </div>
@@ -329,6 +321,6 @@ onMounted(() => {
         letter-spacing: 0.25px;
     }
     .li-product-menu li .active {
-        color: #000000 !important;
+        color: #17A2B8 !important;
     }
 </style>
