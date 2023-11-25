@@ -2,9 +2,10 @@
 import { useOrder } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import { TableSkalaton} from '@/components'
 
 const order    = useOrder();
-const {orders} = storeToRefs(order);
+const {orders, tableLoader} = storeToRefs(order);
 
 onMounted(() => {
   order.getOrders();
@@ -40,8 +41,8 @@ onMounted(() => {
           <div>
             <table class="table table-bordered order-list">
               <thead>
-                <tr class="bg-info">
-                  <th class="text-light" style="width: 5%;" scope="col">SL</th>
+                <tr class="bg-info text-center">
+                  <th class="text-light" style="width: 5%;" scope="col">Serial</th>
                   <th class="text-light" style="width: 8%;" scope="col">OrderId</th>
                   <th class="text-light" style="width: ;" scope="col">Address</th>
                   <th class="text-light" style="width: ;" scope="col">Delivery Type</th>
@@ -52,11 +53,11 @@ onMounted(() => {
                   <th class="text-light" style="width: 10%;" scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="(order, index) in orders" :key="index">
+              <tbody v-if="!tableLoader">
+                <tr v-for="(order, index) in orders" :key="index" class="text-center">
                   <th scope="row">{{ index+1 }}</th>
                   <td>#{{order.order_number }}</td>
-                  <td>{{ order.shipping_address }}</td>
+                  <td>{{ order.shipping_address }}, {{ order.district_name }}, {{ order.division_name }}</td>
                   <td>{{ order.payment_type=='Cash'?'Cash On Delivery':'Online' }}</td>
                   <td>{{ order.status }}</td>
                   <td>{{ $filters.currencySymbol(order.subtotal)}}</td>
@@ -64,6 +65,9 @@ onMounted(() => {
                   <td>{{ $filters.currencySymbol(order.total) }}</td>
                   <td><a href="" class="btn btn-info" style="font-size: 14px;">View Details</a></td>
                 </tr>
+              </tbody>
+              <tbody v-else>
+                <TableSkalaton :dataAmount="10"/>
               </tbody>
             </table>
           </div>

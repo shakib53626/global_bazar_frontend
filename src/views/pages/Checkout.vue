@@ -274,7 +274,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" v-if="!user.data">
                                         <div class="checkout-form-list create-acc">
                                             <input id="cbox" type="checkbox" @click="showCreateAccount" v-model="isRegister">
                                             <label for="cbox">Create an account?</label>

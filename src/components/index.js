@@ -9,4 +9,5 @@ export { default as OfferBannerSkalaton } from '@/components/skeleton/OfferBanne
 export { default as SellersSkalaton } from '@/components/skeleton/Sellers.vue';
 export { default as SellerStoreSkalaton } from '@/components/skeleton/SellerStore.vue';
 export { default as SidebarSkalaton } from '@/components/skeleton/Sidebar.vue';
+export { default as TableSkalaton } from '@/components/skeleton/Table.vue';
 export { default as OrderSuccess } from '@/components/modal/OrderSuccess.vue';

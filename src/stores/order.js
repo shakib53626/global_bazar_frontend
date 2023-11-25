@@ -3,8 +3,9 @@ import { defineStore } from "pinia";
 
 export const useOrder = defineStore('order',{
     state:()=>({
-        orders: [],
-        loading   : false,
+        orders     : [],
+        loading    : false,
+        tableLoader: false,
     }),
 
     actions:{
@@ -29,12 +30,15 @@ export const useOrder = defineStore('order',{
         },
 
         async getOrders(){
+            this.tableLoader = true;
             try {
                 const res = await axiosInstance.get('/user/orders');
                 console.log(res);
                 this.orders = res.data.data
             } catch (error) {
-                
+                console.log(error);
+            }finally{
+                this.tableLoader = false;
             }
         }
     }
