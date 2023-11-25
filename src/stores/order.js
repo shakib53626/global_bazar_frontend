@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const useOrder = defineStore('order',{
     state:()=>({
-        categories: [],
+        orders: [],
         loading   : false,
     }),
 
@@ -25,6 +25,16 @@ export const useOrder = defineStore('order',{
                 }
             }finally{
                 this.loading = false;
+            }
+        },
+
+        async getOrders(){
+            try {
+                const res = await axiosInstance.get('/user/orders');
+                console.log(res);
+                this.orders = res.data.data
+            } catch (error) {
+                
             }
         }
     }

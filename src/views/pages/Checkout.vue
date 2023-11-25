@@ -82,11 +82,17 @@
             password        : password.value
         });
         if(res.data){
-            auth.user = res;
-            notification.Success("Order Created Success");
-            cart.$reset();
-            $("#OrderSuccess").modal("show");
-        }else{
+            if (res.meta) {
+                auth.user = res;
+                notification.Success("Order Created Success");
+                cart.$reset();
+                $("#OrderSuccess").modal("show");
+            } else {
+                notification.Success("Order Created Success");
+                cart.$reset();
+                $("#OrderSuccess").modal("show");
+            }
+        } else {
             errors.value = res;
         }
     }
