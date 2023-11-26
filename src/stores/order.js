@@ -6,6 +6,7 @@ export const useOrder = defineStore('order',{
         orders     : [],
         loading    : false,
         tableLoader: false,
+        orderInfo: {},
     }),
 
     actions:{
@@ -33,12 +34,22 @@ export const useOrder = defineStore('order',{
             this.tableLoader = true;
             try {
                 const res = await axiosInstance.get('/user/orders');
-                console.log(res);
                 this.orders = res.data.data
             } catch (error) {
                 console.log(error);
             }finally{
                 this.tableLoader = false;
+            }
+        },
+
+        async getDetails(orderId){
+            try {
+                const res = await axiosInstance.get(`/user/order/${orderId}`);
+                if(res.status===200){
+                    this.orderInfo = res.data.data
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
     }
