@@ -4,7 +4,7 @@
         dataAmount:{
             type:Number,
             required: true,
-            default:15,
+            default:12,
         }
     });
 
@@ -12,12 +12,6 @@
 <template>
     <tr v-for="(data , index) in dataAmount" :key="index">
         <th scope="row"><div class="ssc-head-line w-100"></div></th>
-        <td><div class="ssc-head-line w-100"></div></td>
-        <td><div class="ssc-head-line w-100"></div></td>
-        <td><div class="ssc-head-line w-100"></div></td>
-        <td><div class="ssc-head-line w-100"></div></td>
-        <td><div class="ssc-head-line w-100"></div></td>
-        <td><div class="ssc-head-line w-100"></div></td>
         <td><div class="ssc-head-line w-100"></div></td>
         <td><div class="ssc-head-line w-100"></div></td>
         <td><div class="ssc-head-line w-100"></div></td>

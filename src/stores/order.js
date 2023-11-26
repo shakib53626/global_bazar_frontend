@@ -6,7 +6,9 @@ export const useOrder = defineStore('order',{
         orders     : [],
         loading    : false,
         tableLoader: false,
-        orderInfo: {},
+        orderInfo  : {},
+        page       : 1,
+        noDataFound: false,
     }),
 
     actions:{
@@ -33,8 +35,20 @@ export const useOrder = defineStore('order',{
         async getOrders(){
             this.tableLoader = true;
             try {
-                const res = await axiosInstance.get('/user/orders');
-                this.orders = res.data.data
+                const res = await axiosInstance.get('/user/orders', {
+                    params: {
+                        page: this.page,
+                    }
+                });
+                console.log(res);
+                if(res.status===200){
+                    if(res.data.data.length){
+                        this.orders.push(...res.data.data);
+                    }else{
+                        this.noDataFound = true;
+                    }
+                }
+                this.page++
             } catch (error) {
                 console.log(error);
             }finally{

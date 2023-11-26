@@ -3,14 +3,15 @@ import { useOrder } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { TableSkalaton} from '@/components'
+import InfiniteLoading from "v3-infinite-loading";
+import moment from 'moment';
 
 const mainPart = ref('ad');
 const order    = useOrder();
-const {orders, tableLoader, orderInfo} = storeToRefs(order);
+const {orders, tableLoader, orderInfo, noDataFound} = storeToRefs(order);
 
 const myOrders = () =>{
-  mainPart.value = 'ol';
-  order.getOrders();
+  loadData();
 }
 const myAccount = () =>{
   mainPart.value = 'ad';
@@ -21,6 +22,10 @@ const orderDetails = (orderId) =>{
   order.getDetails(orderId);
 }
 
+const loadData = () =>{
+  mainPart.value = 'ol';
+  order.getOrders();
+}
 
 onMounted(() => {
   
@@ -47,12 +52,12 @@ onMounted(() => {
         </div>
 
         <!-- For User Information Code -->
-        <div class="col-md-10" style="padding: 50px; height:100vh; overflow-y:scroll;" v-show="mainPart=='ad'">
+        <div class="col-md-10" style="padding: 50px; height:80vh; overflow-y:scroll;" v-show="mainPart=='ad'">
           <h1 class="text-center">Coming Soon</h1>
         </div>
 
         <!-- For Order List Code -->
-        <div class="col-md-10" style="padding: 50px; height:100vh; overflow-y:scroll;" v-show="mainPart=='ol'">
+        <div class="col-md-10" style="padding: 50px; height:80vh; overflow-y:scroll;" v-show="mainPart=='ol'">
           <div class="mt-4">
             <h4>My Orders</h4>
           </div>
@@ -71,7 +76,7 @@ onMounted(() => {
                   <th class="text-light" style="width: 10%;" scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody v-if="!tableLoader">
+              <tbody >
                 <tr v-for="(order, index) in orders" :key="index" class="text-center">
                   <th scope="row">{{ index+1 }}</th>
                   <td>#{{order.order_number }}</td>
@@ -84,15 +89,36 @@ onMounted(() => {
                   <td><button class="btn btn-info border-none" style="font-size: 14px;" @click="orderDetails(order.id)">View Details</button></td>
                 </tr>
               </tbody>
-              <tbody v-else>
-                <TableSkalaton :dataAmount="15"/>
-              </tbody>
             </table>
+            <InfiniteLoading @infinite="loadData" >
+              <template #spinner>
+                <table class="table table-bordered order-list" v-if="tableLoader">
+                  <thead>
+                    <tr class="text-center">
+                      <th class="text-light" style="width: 5%;" scope="col"></th>
+                      <th class="text-light" style="width: 8%;" scope="col"></th>
+                      <th class="text-light" style="width: ;" scope="col"></th>
+                      <th class="text-light" style="width: ;" scope="col"></th>
+                      <th class="text-light" style="width: 8%;" scope="col"></th>
+                      <th class="text-light" style="width: 8%;" scope="col"></th>
+                      <th class="text-light" style="width: 8%;" scope="col"></th>
+                      <th class="text-light" style="width: 8%;" scope="col"></th>
+                      <th class="text-light" style="width: 10%;" scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <TableSkalaton :dataAmount="12"/>
+                  </tbody>
+                </table>
+                <h1 class="text-center"><span v-if="noDataFound" class="text-danger" style="font-size:20px">No More Data Found</span></h1>
+                <!-- <span>Loading...</span> -->
+              </template>
+            </InfiniteLoading>
           </div>
         </div>
 
         <!-- For Order Details Code -->
-        <div class="col-md-10" style="padding: 50px;height:100vh; overflow-y:scroll;" v-show="mainPart=='od'" v-if="mainPart=='od'">
+        <div class="col-md-10" style="padding: 50px;height:80vh; overflow-y:scroll;" v-show="mainPart=='od'" v-if="mainPart=='od'">
           <div class="mt-4 btn d-flex justify-content-between">
             <h4>Order Details</h4>
             <button class="btn btn-info" @click="myOrders"><i class="fa fa-arrow-left me-2"></i> Back</button>
@@ -156,8 +182,8 @@ onMounted(() => {
                       <td>{{ $filters.currencySymbol(item.quantity*item.price)}}</td>
                     </tr>
                     <tr class="text-center">
-                      <td colspan="6">SubTotal</td>
-                      <td>{{ $filters.currencySymbol(orderInfo.subtotal)}}</td>
+                      <td colspan="6" style="font-weight: 500; font-size: 16px;">SubTotal</td>
+                      <td style="font-weight: 500; font-size: 16px;">{{ $filters.currencySymbol(orderInfo.subtotal)}}</td>
                     </tr>
                     <tr class="text-center">
                       <td colspan="6">Offer Discount</td>
@@ -184,7 +210,7 @@ onMounted(() => {
                   <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Order Number </span>: #{{ orderInfo.order_number }}</li>
                   <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Order Name </span>: {{ orderInfo.customer_name }}</li>
                   <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Phone Number </span>: {{ orderInfo.customer_phone }}</li>
-                  <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Order Date </span>: {{ orderInfo.created_at }}</li>
+                  <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Order Date </span>: {{ moment(orderInfo.created_at).format('LLLL') }}</li>
                   <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Payable Amount </span>: {{ $filters.currencySymbol(orderInfo.total) }}</li>
                   <li class="mb-2"><span class="text-dark d-inline-block" style="font-weight:500;width:140px;">Payment Status </span>: Paid</li>
                 </ul>
@@ -208,7 +234,7 @@ onMounted(() => {
 <style>
   .my-account-sidebar{
     box-shadow: 0px 0px 26px -19px;
-    height: 100vh;
+    height: 80vh;
   }
   .my-account-sidebar .profile-image{
     width: 200px;
