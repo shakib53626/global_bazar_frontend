@@ -6,6 +6,7 @@ export const useAuth = defineStore("auth", {
         user:{},
         errors:{},
         logoutLoading : false,
+        profileLoading: false,
      }),
 
      persist:['user'],
@@ -84,6 +85,37 @@ export const useAuth = defineStore("auth", {
                 this.logoutLoading = false;
             }
         },
+
+        async updateProfile(profileInfo){
+            this.profileLoading = true;
+            try {
+                const res = await axiosInstance.post('/user/profile-update', profileInfo);
+                if (res.status===200) {
+                    this.user.data = res.data.data
+                }
+            } catch (error) {
+                console.log(error);
+            }finally{
+                this.profileLoading = false;
+            }
+        },
+
+        async updatePassword(data){
+            try {
+                const res = await axiosInstance.put('/user/password-update', data);
+                if(res.status===200){
+                    return new Promise((resolve) => {
+                        resolve(res);
+                    });
+                }
+            } catch (error) {
+                if(error.response){
+                    return new Promise((reject) => {
+                        reject(error.response.data.errors);
+                    });
+                }
+            }
+        }
      },
 
 })

@@ -1,14 +1,29 @@
 <script setup>
-import { useOrder } from '@/stores';
+import { useOrder, useAuth, useAddress, useNotification } from '@/stores';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { TableSkalaton} from '@/components'
 import InfiniteLoading from "v3-infinite-loading";
 import moment from 'moment';
 
-const mainPart = ref('ad');
-const order    = useOrder();
+import { Form, Field } from 'vee-validate';
+import * as yup from 'yup';
+
+const mainPart     = ref('ad');
+const isEdit       = ref(true);
+const order        = useOrder();
+const auth         = useAuth();
+const address      = useAddress();
+const notification = useNotification();
+const { divisions, districts } = storeToRefs(address);
 const {orders, tableLoader, orderInfo, noDataFound} = storeToRefs(order);
+
+const name       = ref(auth.user.data?.name);
+const phone      = ref(auth.user.data?.phone);
+const email      = ref(auth.user.data?.email);
+const divisionId = ref(auth.user.data?.division_id);
+const districtId = ref(auth.user.data?.district_id);
+const userAddress    = ref(auth.user.data?.address)
 
 const myOrders = () =>{
   loadData();
@@ -27,8 +42,47 @@ const loadData = () =>{
   order.getOrders();
 }
 
+const changePassword = () =>{
+  mainPart.value = 'cp';
+}
+
+const editableField = () =>{
+  isEdit.value = !isEdit.value
+}
+
+const updateProfile = () =>{
+  auth.updateProfile({
+    name       : name.value,
+    phone      : phone.value,
+    email      : email.value,
+    division_id: divisionId.value,
+    district_id: districtId.value,
+    address    : userAddress.value
+  });
+}
+
+const updatePassword = async (values, { setErrors }) => {
+  let res = await auth.updatePassword(values);
+  if (res.data) {
+    notification.Success("Password Updated Successpully")
+  } else {
+    setErrors(res);
+  }
+}
+
+const schema = yup.object({
+  current_password: yup.string().required("Current Password field is required"),
+  password: yup.string().required(),
+  password_confirmation: yup.string().required('Password Confirmation is required').min(8).oneOf([yup.ref('password'), null], 'Password and confirmation password must be match'),
+});
+
+watch(() => divisionId.value, (newValue, oldValue) => {
+  address.getDistrict(newValue);
+})
+
 onMounted(() => {
-  
+  address.getDivisions();
+  address.getDistrict(auth.user.data?.division_id);
 })
 
 </script>
@@ -46,6 +100,7 @@ onMounted(() => {
           <div class="sidebar-nav">
             <ul>
               <li><button class="myAccountSidebarButton" :class="{'active' : mainPart=='ad'}" @click="myAccount">My Account</button></li>
+              <li><button class="myAccountSidebarButton" :class="{'active' : mainPart=='cp'}" @click="changePassword">Change Password</button></li>
               <li><button class="myAccountSidebarButton" :class="{'active' : mainPart=='ol' || mainPart=='od'}" @click="myOrders">Orders</button></li>
             </ul>
           </div>
@@ -53,7 +108,96 @@ onMounted(() => {
 
         <!-- For User Information Code -->
         <div class="col-md-10" style="padding: 50px; height:80vh; overflow-y:scroll;" v-show="mainPart=='ad'">
-          <h1 class="text-center">Coming Soon</h1>
+          <div class="mt-4 d-flex justify-content-between">
+            <h4>Account Information</h4>
+            <button class="btn btn-info" @click.prevent="editableField"><i class="fa fa-edit me-2"></i> Edit</button>
+          </div>
+          <div class="mt-4">
+            <form @submit.prevent="updateProfile">
+              <div class="row">
+                <div class="col-md-4 mt-4">
+                  <label for="name">Your Name</label>
+                  <input type="text" class="form-control" id="name" :disabled="isEdit" v-model="name">
+                </div>
+                <div class="col-md-4 mt-4">
+                  <label for="email">Your Email</label>
+                  <input type="text" class="form-control" id="email" :disabled="isEdit" v-model="email">
+                </div>
+                <div class="col-md-4 mt-4">
+                  <label for="phone">Your Phone</label>
+                  <input type="text" class="form-control" id="phone" :disabled="isEdit" v-model="phone">
+                </div>
+                <div class="col-md-4 mt-4">
+                  <label for="division">Your Division</label>
+                  <select name="" class="form-controll" id="division" :disabled="isEdit" v-model="divisionId">
+                    <option :value="division.id" v-for="(division, index) in divisions" :key="index">{{ division.name }} - {{ division.bn_name }}</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mt-4">
+                  <label for="district">Your District</label>
+                    <select name="" class="form-controll" id="district" :disabled="isEdit">
+                      <option :value="district.id" v-for="(district, index) in districts" :key="index">{{ district.name }} - {{ district.bn_name }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mt-4">
+                  <label for="phone">Your Address</label>
+                  <input type="text" class="form-control" id="phone" :disabled="isEdit" v-model="userAddress">
+                </div>
+              </div>
+              <div class="row mt-4" v-if="!isEdit">
+                <div class="col-md-2">
+                  <button class="btn btn-info" v-if="auth.profileLoading"><i class="fas fa-spinner fa-spin"></i> Loading....</button>
+                  <button class="btn btn-info" type="submit" v-else>Save Change</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-10" style="padding: 50px; margin-top:50px; height:80vh; overflow-y:scroll;" v-show="mainPart == 'cp'">
+          <div class="row">
+            <div class="col-md-4 m-auto">
+              <div class="cart-area">
+                <h3 class="text-center text-info" style="margin-bottom:40px;">Change Password</h3>
+                <Form @submit="updatePassword" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+                  <div class="mb-4">
+                    <label>Current Password <span class="text-danger">*</span></label>
+                    <Field
+                        name="current_password"
+                        class="mb-0 form-control"
+                        type="password"
+                        placeholder="Enter Current Password"
+                    />
+                    <span class="text-danger">{{ errors.current_password }}</span>
+                  </div>
+                  <div class="mb-4">
+                    <label>Password <span class="text-danger">*</span></label>
+                    <Field
+                        name="password"
+                        class="mb-0 form-control"
+                        type="password"
+                        placeholder="Enter New Password"
+                    />
+                    <span class="text-danger">{{ errors.password }}</span>
+                  </div>
+                  <div class="mb-4">
+                    <label>Confirm Password <span class="text-danger">*</span></label>
+                    <Field
+                        name="password_confirmation"
+                        class="mb-0 form-control"
+                        type="password"
+                        placeholder="Re-type Your Password"
+                    />
+                    <span class="text-danger">{{ errors.password_confirmation }}</span>
+                  </div>
+                  <div>
+                    <button class="btn btn-info" v-if="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Loading...</button>
+                    <button class="btn btn-info" v-else>Update Password</button>
+                  </div>
+                </Form>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- For Order List Code -->
@@ -313,5 +457,11 @@ onMounted(() => {
   .order-status-line.active i{
     background-color: #17A2B8;
     border: 2px solid #17A2B8;
+  }
+  .cart-area{
+    border: 1px solid #c0c0c0;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 40px;
   }
 </style>
