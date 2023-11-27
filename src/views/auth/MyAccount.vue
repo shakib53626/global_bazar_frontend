@@ -50,8 +50,8 @@ const editableField = () =>{
   isEdit.value = !isEdit.value
 }
 
-const updateProfile = () =>{
-  auth.updateProfile({
+const updateProfile = async() =>{
+  let res = await auth.updateProfile({
     name       : name.value,
     phone      : phone.value,
     email      : email.value,
@@ -59,6 +59,9 @@ const updateProfile = () =>{
     district_id: districtId.value,
     address    : userAddress.value
   });
+  if(res.data){
+    notification.Success("Profile Update Success")
+  }
 }
 
 const updatePassword = async (values, { setErrors }) => {

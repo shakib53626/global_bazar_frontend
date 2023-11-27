@@ -92,6 +92,9 @@ export const useAuth = defineStore("auth", {
                 const res = await axiosInstance.post('/user/profile-update', profileInfo);
                 if (res.status===200) {
                     this.user.data = res.data.data
+                    return new Promise((resolve) => {
+                        resolve(res.data);
+                    });
                 }
             } catch (error) {
                 console.log(error);
