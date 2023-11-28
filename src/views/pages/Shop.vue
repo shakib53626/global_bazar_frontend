@@ -41,6 +41,13 @@
             selectedCategory.value.push(route.query.products);
         }
     }
+    
+    const queryHeaderSearch = () =>{
+        searchQuery.value = '';
+        if(route.query.search){
+            searchQuery.value = route.query.search;
+        }
+    }
 
     // Brand and Category Search Code 
 
@@ -66,6 +73,11 @@
     // Menu bar category product show *************
     watch(() => route.query.products, (newValue, oldValue) => {
         queryProducts();
+        getProducts();
+    })
+    
+    watch(() => route.query.search, (newValue, oldValue) => {
+        queryHeaderSearch();
         getProducts();
     })
     
@@ -107,6 +119,7 @@
 
     onMounted(() => {
         queryProducts();
+        queryHeaderSearch();
         shop.getSidebarData();
         getProducts();
         myModal = new bootstrap.Modal(document.getElementById('quickViewModal'))

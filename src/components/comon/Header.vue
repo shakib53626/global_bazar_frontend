@@ -4,6 +4,7 @@
     import { storeToRefs } from 'pinia';
     import { useRouter } from 'vue-router';
     
+    const searchData    = ref('');
     const router        = useRouter();
     const themeInfo     = useThemeSetting();
     const auth          = useAuth();
@@ -32,6 +33,7 @@
         toggleIcon.value[index] = !toggleIcon.value[index];
     }
 
+
     // User Logout Code Here **************************************
 
     const userLogout = async() =>{
@@ -47,6 +49,10 @@
 
     const deleteItem = (itemId) =>{
         cart.deleteItem(itemId)
+    }
+
+    const handleSearch = () =>{
+        router.push({name: 'shop', query:{search:searchData.value}});
     }
 
     onMounted(() => {
@@ -122,8 +128,8 @@
                             </div>
                         </div>
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
-                            <form action="#" class="hm-searchbox">
-                                <input type="text" placeholder="Enter your search key ...">
+                            <form action="#" class="hm-searchbox" @submit.prevent="handleSearch">
+                                <input type="text" placeholder="Enter your search key ..." v-model="searchData">
                                 <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
                             </form>
                             <div class="header-middle-right">

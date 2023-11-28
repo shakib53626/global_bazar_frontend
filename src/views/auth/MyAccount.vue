@@ -10,6 +10,7 @@ import { Form, Field } from 'vee-validate';
 import * as yup from 'yup';
 
 const mainPart     = ref('ad');
+const imgLoading   = ref(false);
 const isEdit       = ref(true);
 const order        = useOrder();
 const auth         = useAuth();
@@ -79,6 +80,22 @@ const schema = yup.object({
   password_confirmation: yup.string().required('Password Confirmation is required').min(8).oneOf([yup.ref('password'), null], 'Password and confirmation password must be match'),
 });
 
+const userImageUpdate = (event) =>{
+  const imageFile = event.target.files[0];
+
+  if(imageFile){
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    auth.imageUpdate(formData);
+  }
+}
+
+const imageLoader = async() =>{
+  imgLoading.value = true;
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  imgLoading.value = false;
+}
+
 watch(() => divisionId.value, (newValue, oldValue) => {
   address.getDistrict(newValue);
 })
@@ -86,6 +103,7 @@ watch(() => divisionId.value, (newValue, oldValue) => {
 onMounted(() => {
   address.getDivisions();
   address.getDistrict(auth.user.data?.division_id);
+  imageLoader();
 })
 
 </script>
@@ -94,12 +112,14 @@ onMounted(() => {
       <div class="row">
         <div class="col-md-2 my-account-sidebar">
           <div class="profile-image">
-            <img src="https://media.istockphoto.com/id/1316420668/vector/user-icon-human-person-symbol-social-profile-icon-avatar-login-sign-web-user-symbol.jpg?s=612x612&w=0&k=20&c=AhqW2ssX8EeI2IYFm6-ASQ7rfeBWfrFFV4E87SaFhJE=" alt="">
+            <div class="ssc-circle mb-2" style="width: 150px;height: 150px;" v-if="imgLoading"></div>
+            <img :src="$filters.makeImgPath(auth.user.data?.image)" alt="" v-else>
             <span class="edit-btn">
-              <i class="fa fa-edit"></i>
+              <input type="file" @change="userImageUpdate" class="profile-img">
+              <i class="fa fa-camera text-light"></i>
             </span>
-            <h4 class="mt-2">Shakibul Islam</h4>
           </div>
+          <h4 class="mt-2 text-center">Shakibul Islam</h4>
           <div class="sidebar-nav">
             <ul>
               <li><button class="myAccountSidebarButton" :class="{'active' : mainPart=='ad'}" @click="myAccount">My Account</button></li>
@@ -157,7 +177,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="col-md-10" style="padding: 50px; margin-top:50px; height:80vh; overflow-y:scroll;" v-show="mainPart == 'cp'">
+        <div class="col-md-10" style="padding: 50px; height:80vh; overflow-y:scroll;" v-show="mainPart == 'cp'">
           <div class="row">
             <div class="col-md-4 m-auto">
               <div class="cart-area">
@@ -265,7 +285,7 @@ onMounted(() => {
         </div>
 
         <!-- For Order Details Code -->
-        <div class="col-md-10" style="padding: 50px;height:80vh; overflow-y:scroll;" v-show="mainPart=='od'" v-if="mainPart=='od'">
+        <div class="col-md-10" style="padding: 50px; height:80vh; overflow-y:scroll;" v-show="mainPart=='od'" v-if="mainPart=='od'">
           <div class="mt-4 btn d-flex justify-content-between">
             <h4>Order Details</h4>
             <button class="btn btn-info" @click="myOrders"><i class="fa fa-arrow-left me-2"></i> Back</button>
@@ -384,32 +404,18 @@ onMounted(() => {
     height: 80vh;
   }
   .my-account-sidebar .profile-image{
-    width: 200px;
+    width: 150px;
     text-align: center;
     margin: auto;
     margin-top: 40px;
     position: relative;
-    border-bottom: 1px solid #b6b6b6;
   }
   .profile-image img{
     max-width: 100%;
     border-radius: 50%;
   }
-  .edit-btn{
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: rgb(190, 190, 190);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    bottom: 40px;
-    right: 26px;
-    cursor: pointer;
-  }
   .edit-btn .fa-edit{
-    color: green;
+    color: #ffffff;
     font-size: 16px;
   }
   .sidebar-nav{
@@ -450,7 +456,7 @@ onMounted(() => {
     position: absolute;
     top: -18px;
     left: 40%;
-    color: #fff;
+    color: #ffffff;
     font-size: 22px;
   }
 
@@ -463,8 +469,48 @@ onMounted(() => {
   }
   .cart-area{
     border: 1px solid #c0c0c0;
-    padding: 20px;
+    padding: 50px;
     border-radius: 20px;
-    margin-top: 40px;
   }
+
+
+
+
+
+
+.profile-image {
+  width: 150px;
+  position: relative;
+  margin: auto;
+}
+
+.profile-image img {
+  border-radius: 50%;
+  border: 6px solid #eaeaea;
+}
+
+.profile-image .edit-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  background: #17A2B8;
+  width: 32px;
+  height: 32px;
+  line-height: 33px;
+  text-align: center;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-img {
+  position: absolute;
+  transform: scale(2);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.profile-img::-webkit-file-upload-button {
+  cursor: pointer;
+}
 </style>

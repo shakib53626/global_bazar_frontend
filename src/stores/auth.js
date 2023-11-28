@@ -118,6 +118,17 @@ export const useAuth = defineStore("auth", {
                     });
                 }
             }
+        }, 
+
+        async imageUpdate(formData){
+            try {
+                const res = await axiosInstance.post('/user/image-update', formData);
+                if(res.status===200){
+                    this.user.data = res.data.data
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
      },
 
